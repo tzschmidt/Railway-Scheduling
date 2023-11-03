@@ -135,6 +135,6 @@ print('Rewards for each agent: {}'.format(all_rewards))
 print('Done for each agent: {}'.format(dones))
 print('Misc info: {}'.format(info))
 
-run_episode(random_env, controller, observations, info)
+# run_episode(random_env, controller, observations, info)
 
 convert_env("testing",random_env)
