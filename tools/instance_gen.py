@@ -64,6 +64,7 @@ def custom_rail_map() -> Tuple[GridTransitionMap, np.array]:
     right_turn_from_south = cells[8]
     right_turn_from_west = transitions.rotate_transition(right_turn_from_south, 90)
     right_turn_from_north = transitions.rotate_transition(right_turn_from_south, 180)
+    right_turn_from_east = transitions.rotate_transition(right_turn_from_south, 270)
     dead_end_from_west = transitions.rotate_transition(dead_end_from_south, 90)
     dead_end_from_north = transitions.rotate_transition(dead_end_from_south, 180)
     dead_end_from_east = transitions.rotate_transition(dead_end_from_south, 270)
@@ -79,16 +80,16 @@ def custom_rail_map() -> Tuple[GridTransitionMap, np.array]:
     
     # define map
     rail_map = np.array(
-        [[empty] * 3] +
-        [[dead_end_from_east] + [horizontal_straight]  + [dead_end_from_west]] +
+        [[right_turn_from_south] + [horizontal_straight] + [right_turn_from_west]] +
+        [[right_turn_from_east] + [horizontal_straight]  + [right_turn_from_north]] +
         [[empty] * 3], dtype=np.uint16)
     rail = GridTransitionMap(width=rail_map.shape[1],
                              height=rail_map.shape[0], transitions=transitions)
     rail.grid = rail_map
-    city_positions = [(1, 0), (1, 2)]
+    city_positions = [(1, 0), (0, 2)]
     train_stations = [
         [((1, 0), 0)],
-        [((1, 2), 0)],
+        [((0, 2), 0)],
     ]
     city_orientations = [0, 0]
     agents_hints = {'city_positions': city_positions,
@@ -262,10 +263,18 @@ def custom_railmap_example(sleep_for_animation, do_rendering):
             controller.step((observations[a], action_dict[a], all_rewards[a], next_obs[a], done[a]))
             score += all_rewards[a]
 
+        print("\n Their current statuses are:")
+        print("============================")
+        for agent_idx, agent in enumerate(env.agents):
+            print("Agent {} status is: {} with its current position being {}".format(
+                agent_idx, str(agent.state), str(agent.position)))
+            
         observations = next_obs.copy()
         if done['__all__']:
             break
         print('Episode: Steps {}\t Score = {}'.format(step, score))
+        
+        
 
     # close the renderer / rendering window
     if env_renderer is not None:
