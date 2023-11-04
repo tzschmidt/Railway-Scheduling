@@ -1,4 +1,3 @@
-
 % north -> north
 trans((Y-1,X),(Y,X),(Y-1,X)) :- transraw((Y,X),0,0).
 % north -> east
@@ -31,8 +30,4 @@ trans((Y,X-1),(Y,X),(Y,X+1)) :- transraw((Y,X),3,1).
 trans((Y,X-1),(Y,X),(Y+1,X)) :- transraw((Y,X),3,2).
 % west -> west
 trans((Y,X-1),(Y,X),(Y,X-1)) :- transraw((Y,X),3,3).
-
-
-
-
 
