@@ -40,15 +40,15 @@ def convert_env(name, env):
 
     for agent_idx, agent in enumerate(env.agents):
         # agents
-        file.write("agent({})\n".format(agent_idx))
+        file.write("agent({}).\n".format(agent_idx))
         # start position
         pos = agent.initial_position
-        file.write("starting({},({},{}))\n".format(agent_idx, pos[0], pos[1]))
+        file.write("starting({},({},{})).\n".format(agent_idx, pos[0], pos[1]))
         # direction
-        file.write("direction({},{})\n".format(agent_idx, agent.direction))
+        file.write("direction({},{}).\n".format(agent_idx, agent.direction))
         # target position
         pos = agent.target
-        file.write("target({},({},{}))\n".format(agent_idx, pos[0], pos[1]))
+        file.write("target({},({},{})).\n".format(agent_idx, pos[0], pos[1]))
 
     # cells and their transitions
     # trans((0,0),1,3) -> cell(0,0) when coming from from east(1) can exit west(3)
@@ -56,7 +56,7 @@ def convert_env(name, env):
     grid = env.rail.grid
     for y in range(env.height):
         for x in range(env.width):
-            file.write("cell({},{})\n".format(y, x))
+            file.write("cell({},{}).\n".format(y, x))
             val = "{0:016b}".format(grid[y][x])
             d = [0]*4
             d[2] = val[:4]
@@ -71,7 +71,7 @@ def convert_env(name, env):
             for i in range(4):
                 for j in range(4):
                     if d[i][j] == '1':
-                        file.write("trans(({},{}),{},{})\n".format(y, x, i, j))
+                        file.write("transraw(({},{}),{},{}).\n".format(y, x, i, j))
 
     file.close()
 
