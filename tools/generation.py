@@ -30,7 +30,7 @@ def render_env(env,wait=True):
     pil_image = PIL.Image.fromarray(image)
     clear_output(wait=True)
     global x
-    pil_image.save("./render/test"+str(x)+".png")
+    pil_image.save("./render/random_test"+str(x)+".png")
     x = x+1
 
 
@@ -137,4 +137,4 @@ print('Misc info: {}'.format(info))
 
 # run_episode(random_env, controller, observations, info)
 
-convert_env("testing",random_env)
+convert_env("random_test",random_env)
