@@ -133,7 +133,6 @@ def convert_env(name, env):
     grid = env.rail.grid
     for y in range(env.height):
         for x in range(env.width):
-            file.write("cell({},{}).\n".format(y, x))
             val = "{0:016b}".format(grid[y][x])
             d = [0]*4
             d[2] = val[:4]
@@ -145,11 +144,14 @@ def convert_env(name, env):
             #d[1] = val[4:8]
             #d[2] = val[8:12]
             #d[3] = val[12:]
+            c = 0
             for i in range(4):
                 for j in range(4):
                     if d[i][j] == '1':
                         file.write("transraw(({},{}),{},{}).\n".format(y, x, i, j))
-    
+                        c += 1
+            if c != 0:
+                file.write("cell(({},{}),{}).\n".format(y, x, c))         
     file.close()
     return
     
