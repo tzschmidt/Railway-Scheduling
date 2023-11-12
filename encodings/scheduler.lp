@@ -6,6 +6,7 @@ step(1..slimit).
 
 % start positions
 at(A,(Y,X),0) :- agent(A), starting(A,(Y,X)).
+
 % generate positions
 0{at(A,(Y,X),S) : cell((Y,X),_)}1 :- agent(A), step(S).
 
@@ -22,8 +23,8 @@ at(A,(Y,X),0) :- agent(A), starting(A,(Y,X)).
 	step(S), agent(A1), agent(A2), A1!=A2.
 
 % keep track of orientation via cell which agent entered from
-% place holder -> start direction
-entered_from(A,(0,0),0) :- agent(A).
+% starting direction
+entered_from(A,(Y-DY,X-DX),0) :- starting(A,(Y,X)), direction(A,D), conv(D,(DY,DX)).
 % wait
 entered_from(A,(Y1,X1),S) :- at(A,(Y,X),S), at(A,(Y,X),S-1), entered_from(A,(Y1,X1),S-1), agent(A), step(S).
 % move
@@ -35,20 +36,25 @@ entered_from(A,C,S) :- at(A,C1,S), at(A,C,S-1), C!=C1, agent(A), step(S).
 % continueous
 :- not at(A,_,S-1), at(A,_,S), step(S), agent(A). 
 % transitions
-:- entered_from(A,(Y1,X1),S), at(A,(Y2,X2),S), at(A,(Y3,X3),S+1), not trans((Y1,X1),(Y2,X2),(Y3,X3)), step(S), agent(A).
+:- entered_from(A,(Y1,X1),S-1), at(A,(Y2,X2),S-1), at(A,(Y3,X3),S), not trans((Y1,X1),(Y2,X2),(Y3,X3)), step(S), agent(A).
 
 % actions:
 % none: 0
 % left: 1
-% TODO
+action(A,1,S) :- at(A,(Y,X+DX),S-1), at(A,(Y,X),S), at(A,(Y+DY,X),S+1), turn(DY,DX), DY+DX=0, cell((Y,X),N), N>=3.
+action(A,1,S) :- at(A,(Y+DY,X),S-1), at(A,(Y,X),S), at(A,(Y,X+DX),S+1), turn(DY,DX), DY+DX!=0, cell((Y,X),N), N>=3.
 % forward: 2
 action(A,2,S) :- at(A,C,S), at(A,C1,S+1), C!=C1, cell(C,N), N<=2.
+% foward on switches
+action(A,2,S) :- at(A,(Y,_),S-1), at(A,(Y,_),S), at(A,(Y,_),S+1), cell((Y,X),N), N>=3.
+action(A,2,S) :- at(A,(_,X),S-1), at(A,(_,X),S), at(A,(_,X),S+1), cell((Y,X),N), N>=3.
 % right: 3
-% TODO
+action(A,3,S) :- at(A,(Y,X+DX),S-1), at(A,(Y,X),S), at(A,(Y+DY,X),S+1), turn(DY,DX), DY+DX!=0, cell((Y,X),N), N>=3.
+action(A,3,S) :- at(A,(Y+DY,X),S-1), at(A,(Y,X),S), at(A,(Y,X+DX),S+1), turn(DY,DX), DY+DX=0, cell((Y,X),N), N>=3.
 % stop: 4
 action(A,4,S) :- at(A,C,S), at(A,C,S+1). 
 
 #minimize{1,S: at(_,_,S)}.
-%#show entered_from/3.
+#show entered_from/3.
 #show at/3.
-#show action/3. 
+#show action/3.
