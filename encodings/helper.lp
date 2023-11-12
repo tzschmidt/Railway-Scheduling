@@ -1,33 +1,18 @@
-% north -> north
-trans((Y-1,X),(Y,X),(Y-1,X)) :- transraw((Y,X),0,0).
-% north -> east
-trans((Y-1,X),(Y,X),(Y,X+1)) :- transraw((Y,X),0,1).
-% north -> south
-trans((Y-1,X),(Y,X),(Y+1,X)) :- transraw((Y,X),0,2).
-% north -> west
-trans((Y-1,X),(Y,X),(Y,X-1)) :- transraw((Y,X),0,3).
-% east -> north
-trans((Y,X+1),(Y,X),(Y-1,X)) :- transraw((Y,X),1,0).
-% east -> east
-trans((Y,X+1),(Y,X),(Y,X+1)) :- transraw((Y,X),1,1).
-% east -> south
-trans((Y,X+1),(Y,X),(Y+1,X)) :- transraw((Y,X),1,2).
-% east -> west
-trans((Y,X+1),(Y,X),(Y,X-1)) :- transraw((Y,X),1,3).
-% south -> north
-trans((Y+1,X),(Y,X),(Y-1,X)) :- transraw((Y,X),2,0).
-% south -> east
-trans((Y+1,X),(Y,X),(Y,X+1)) :- transraw((Y,X),2,1).
-% south -> south
-trans((Y+1,X),(Y,X),(Y+1,X)) :- transraw((Y,X),2,2).
-% south -> west
-trans((Y+1,X),(Y,X),(Y,X-1)) :- transraw((Y,X),2,3).
-% west -> north
-trans((Y,X-1),(Y,X),(Y-1,X)) :- transraw((Y,X),3,0).
-% west -> east
-trans((Y,X-1),(Y,X),(Y,X+1)) :- transraw((Y,X),3,1).
-% west -> south
-trans((Y,X-1),(Y,X),(Y+1,X)) :- transraw((Y,X),3,2).
-% west -> west
-trans((Y,X-1),(Y,X),(Y,X-1)) :- transraw((Y,X),3,3).
+% directions
+% north
+conv(0,(-1,0)).
+% east
+conv(1,(0,1)).
+% south
+conv(2,(1,0)).
+% west
+conv(3,(0,-1)).
 
+% transitions
+trans((Y+DY1,X+DX1),(Y,X),(Y+DY2,X+DX2)) :- transraw((Y,X),D1,D2), conv(D1,(DY1, DX1)), conv(D2,(DY2,DX2)).
+
+% turns:
+turn(-1,1).
+turn(1,1).
+turn(1,-1).
+turn(-1,-1).
