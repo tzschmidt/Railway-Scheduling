@@ -81,14 +81,15 @@ def custom_rail_map() -> Tuple[GridTransitionMap, np.array]:
     # define map
     rail_map = np.array(
         [[right_turn_from_south] + [horizontal_straight] + [right_turn_from_west]] +
-        [[right_turn_from_east] + [horizontal_straight]  + [right_turn_from_north]] +
+        [[vertical_straight] + [right_turn_from_south] + [right_turn_from_north]] +
+        [[right_turn_from_east] + [simple_switch_left_east]  + [dead_end_from_west]] +
         [[empty] * 3], dtype=np.uint16)
     rail = GridTransitionMap(width=rail_map.shape[1],
                              height=rail_map.shape[0], transitions=transitions)
     rail.grid = rail_map
-    city_positions = [(1, 0), (0, 2)]
+    city_positions = [(2, 0), (0, 2)]
     train_stations = [
-        [((1, 0), 0)],
+        [((2, 0), 0)],
         [((0, 2), 0)],
     ]
     city_orientations = [0, 0]
@@ -144,14 +145,18 @@ def convert_env(name, env):
             #d[1] = val[4:8]
             #d[2] = val[8:12]
             #d[3] = val[12:]
-            c = 0
+            cell = False
             for i in range(4):
+                c = 0
                 for j in range(4):
                     if d[i][j] == '1':
                         file.write("transraw(({},{}),{},{}).\n".format(y, x, i, j))
                         c += 1
-            if c != 0:
-                file.write("cell(({},{}),{}).\n".format(y, x, c))         
+                if c != 0:
+                    cell = True
+                    file.write("trans_count(({},{}),{},{}).\n".format(y, x, i, c))
+            if cell:
+                file.write("cell({},{}).\n".format(y, x))         
     file.close()
     return
     
