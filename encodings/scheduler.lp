@@ -1,6 +1,6 @@
 
 % step limit
-#const slimit=10.
+#const slimit=20.
 
 step(1..slimit).
 
@@ -8,7 +8,7 @@ step(1..slimit).
 at(A,(Y,X),0) :- agent(A), starting(A,(Y,X)).
 
 % generate positions
-0{at(A,(Y,X),S) : cell((Y,X),_)}1 :- agent(A), step(S).
+0{at(A,(Y,X),S) : cell(Y,X)}1 :- agent(A), step(S).
 
 % finish at target
 :- not at(A,(Y,X),_), target(A,(Y,X)), agent(A).
@@ -41,20 +41,21 @@ entered_from(A,C,S) :- at(A,C1,S), at(A,C,S-1), C!=C1, agent(A), step(S).
 % actions:
 % none: 0
 % left: 1
-action(A,1,S) :- at(A,(Y,X+DX),S-1), at(A,(Y,X),S), at(A,(Y+DY,X),S+1), turn(DY,DX), DY+DX=0, cell((Y,X),N), N>=3.
-action(A,1,S) :- at(A,(Y+DY,X),S-1), at(A,(Y,X),S), at(A,(Y,X+DX),S+1), turn(DY,DX), DY+DX!=0, cell((Y,X),N), N>=3.
+action(A,1,S) :- entered_from(A,(Y,X-DX),S), at(A,(Y,X),S), at(A,(Y+DY,X),S+1), turn(DY,DX), DY+DX=0, trans_count((Y,X),D,N), conv(D,(0,-DX)), N>=2.
+action(A,1,S) :- entered_from(A,(Y-DY,X),S), at(A,(Y,X),S), at(A,(Y,X+DX),S+1), turn(DY,DX), DY+DX!=0, trans_count((Y,X),D,N), conv(D,(-DY,0)), N>=2.
 % forward: 2
-action(A,2,S) :- at(A,C,S), at(A,C1,S+1), C!=C1, cell(C,N), N<=2.
+action(A,2,S) :- entered_from(A,(Y+DY,X+DX),S), at(A,(Y,X),S), at(A,(Y1,X1),S+1), Y!=Y1, trans_count((Y,X),D,N), conv(D,(DY,DX)), N=1.
+action(A,2,S) :- entered_from(A,(Y+DY,X+DX),S), at(A,(Y,X),S), at(A,(Y1,X1),S+1), X!=X1, trans_count((Y,X),D,N), conv(D,(DY,DX)), N=1.
 % foward on switches
-action(A,2,S) :- at(A,(Y,_),S-1), at(A,(Y,_),S), at(A,(Y,_),S+1), cell((Y,X),N), N>=3.
-action(A,2,S) :- at(A,(_,X),S-1), at(A,(_,X),S), at(A,(_,X),S+1), cell((Y,X),N), N>=3.
+action(A,2,S) :- entered_from(A,(Y,X+DX),S), at(A,(Y,X),S), at(A,(Y,_),S+1), trans_count((Y,X),D,N), conv(D,(0,DX)), N>=2.
+action(A,2,S) :- entered_from(A,(Y+DY,X),S), at(A,(Y,X),S), at(A,(_,X),S+1), trans_count((Y,X),D,N), conv(D,(DY,0)), N>=2.
 % right: 3
-action(A,3,S) :- at(A,(Y,X+DX),S-1), at(A,(Y,X),S), at(A,(Y+DY,X),S+1), turn(DY,DX), DY+DX!=0, cell((Y,X),N), N>=3.
-action(A,3,S) :- at(A,(Y+DY,X),S-1), at(A,(Y,X),S), at(A,(Y,X+DX),S+1), turn(DY,DX), DY+DX=0, cell((Y,X),N), N>=3.
+action(A,3,S) :- entered_from(A,(Y,X-DX),S), at(A,(Y,X),S), at(A,(Y+DY,X),S+1), turn(DY,DX), DY+DX!=0, trans_count((Y,X),D,N), conv(D,(0,-DX)), N>=2.
+action(A,3,S) :- entered_from(A,(Y-DY,X),S), at(A,(Y,X),S), at(A,(Y,X+DX),S+1), turn(DY,DX), DY+DX=0, trans_count((Y,X),D,N), conv(D,(-DY,0)), N>=2.
 % stop: 4
 action(A,4,S) :- at(A,C,S), at(A,C,S+1). 
 
 #minimize{1,S: at(_,_,S)}.
-#show entered_from/3.
+%#show entered_from/3.
 #show at/3.
 #show action/3.

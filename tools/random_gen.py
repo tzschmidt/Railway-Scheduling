@@ -52,7 +52,6 @@ def convert_env(name, env):
 
     # cells and their transitions
     # trans((0,0),1,3) -> cell(0,0) when coming from from east(1) can exit west(3)
-    # other appproach trans((0,0),1,0) -> cell(0,0) when facing east(1) can exit north(0)
     grid = env.rail.grid
     for y in range(env.height):
         for x in range(env.width):
@@ -62,19 +61,18 @@ def convert_env(name, env):
             d[3] = val[4:8]
             d[0] = val[8:12]
             d[1] = val[12:]
-            # other approach
-            #d[0] = val[:4]
-            #d[1] = val[4:8]
-            #d[2] = val[8:12]
-            #d[3] = val[12:]
-            c = 0
+            cell = False
             for i in range(4):
+                c = 0
                 for j in range(4):
                     if d[i][j] == '1':
                         file.write("transraw(({},{}),{},{}).\n".format(y, x, i, j))
                         c += 1
-            if c != 0:
-            file.write("cell(({},{}),{}).\n".format(y, x, c))
+                if c != 0:
+                    cell = True
+                    file.write("trans_count(({},{}),{},{}).\n".format(y, x, i, c))
+            if cell:
+                file.write("cell({},{}).\n".format(y, x)) 
     file.close()
 
 
