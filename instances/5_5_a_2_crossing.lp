@@ -1,10 +1,10 @@
 agent(0).
-starting(0,(2,3)).
-direction(0,0).
+starting(0,(0,3)).
+direction(0,1).
 target(0,(3,0)).
 agent(1).
-starting(1,(3,0)).
-direction(1,2).
+starting(1,(4,1)).
+direction(1,1).
 target(1,(2,3)).
 transraw((0,2),1,2).
 trans_count((0,2),1,1).

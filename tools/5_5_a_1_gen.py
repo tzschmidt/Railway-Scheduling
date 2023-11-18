@@ -85,7 +85,7 @@ def custom_rail_map() -> Tuple[GridTransitionMap, np.array]:
     rail_map = np.array(
         [[right_turn_from_south] + [right_turn_from_west] + [empty]+ [right_turn_from_south]+ [right_turn_from_west]] +
         [[vertical_straight] + [simple_switch_north_right] + [horizontal_straight]+ [simple_switch_north_left]+ [vertical_straight]] +
-        [[right_turn_from_east] + [right_turn_from_north]  + [empty]+ [rvertical_straight]+ [vertical_straight]] +
+        [[right_turn_from_east] + [right_turn_from_north]  + [empty]+ [vertical_straight]+ [vertical_straight]] +
         [[right_turn_from_south] + [horizontal_straight]  + [horizontal_straight]+ [right_turn_from_north]+ [vertical_straight]] +
         [[right_turn_from_east] + [horizontal_straight]  + [horizontal_straight]+ [horizontal_straight]+ [right_turn_from_north]] +
         [[empty] * 5], dtype=np.uint16)
@@ -201,7 +201,7 @@ def custom_railmap_example(sleep_for_animation, do_rendering):
     env.reset()
 
     # convert env to .lp
-    convert_env("test", env)    
+    convert_env("5_5_a_1_test", env)    
 
     # instance gen done ----------------------
     # following code just checks if instance is valid (executable)
