@@ -6,6 +6,7 @@ import os
 from typing import Tuple
 
 import numpy as np
+import json
 
 from flatland.core.env_observation_builder import DummyObservationBuilder
 from flatland.core.grid.rail_env_grid import RailEnvTransitions
@@ -112,6 +113,28 @@ def create_env():
                   )
     return env
 
+def save_as_json(name, env):
+
+    agent_id_list = []
+
+    for agent_idx, agent in enumerate(env.agents):
+        agent_id_list.append(agent_idx)
+
+    grid = env.rail.grid.tolist()
+    start = list(agent.initial_position)
+    target = list(agent.target)
+    agent = agent_id_list
+
+    data = {
+        'grid':grid,
+        'agents':agent,
+        'target':target,
+        'start':start
+    }
+
+    with open("..\instances\{}.json".format(name), "w") as json_file:
+        json.dump(data, json_file, indent=4)
+
 def convert_env(name, env):
     
     file = open("..\instances\{}.lp".format(name), "w")
@@ -158,6 +181,7 @@ def convert_env(name, env):
             if cell:
                 file.write("cell({},{}).\n".format(y, x))         
     file.close()
+    save_as_json(name, env)
     return
     
 def custom_railmap_example(sleep_for_animation, do_rendering):
