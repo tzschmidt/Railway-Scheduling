@@ -1,7 +1,7 @@
 agent(0).
-starting(0,(2,0)).
-direction(0,2).
-target(0,(0,2)).
+starting(0,(0,2)).
+direction(0,0).
+target(0,(2,0)).
 transraw((0,0),1,2).
 trans_count((0,0),1,1).
 transraw((0,0),2,1).

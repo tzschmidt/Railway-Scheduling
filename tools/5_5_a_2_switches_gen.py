@@ -123,20 +123,24 @@ def create_env():
 def save_as_json(name, env):
 
     agent_id_list = []
+    target = []
+    start = []
 
     for agent_idx, agent in enumerate(env.agents):
         agent_id_list.append(agent_idx)
+        target.append(agent.target)
+        start.append(agent.initial_position)
 
     grid = env.rail.grid.tolist()
-    start = list(agent.initial_position)
-    target = list(agent.target)
+    start_list = start
+    target_list = target
     agent = agent_id_list
 
     data = {
         'grid':grid,
         'agents':agent,
-        'target':target,
-        'start':start
+        'target':target_list,
+        'start':start_list
     }
 
     with open("..\instances\{}.json".format(name), "w") as json_file:
