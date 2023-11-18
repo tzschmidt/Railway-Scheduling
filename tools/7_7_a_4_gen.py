@@ -51,13 +51,15 @@ class RandomAgent:
 
 
 def custom_rail_map() -> Tuple[GridTransitionMap, np.array]:
-    # We instantiate a very simple rail network on a 5x5 grid:
-    #   0 1 2 3 4
+    # We instantiate a very simple rail network on a 7x7 grid:
+    #   0 1 2 3 4 5 6
     # 0     
-    # 1 - - - - -    
+    # 1 - - - - - - -    
     # 2     
     # 3
     # 4
+    # 5
+    # 6
 
     transitions = RailEnvTransitions()
     cells = transitions.transition_list
@@ -84,23 +86,29 @@ def custom_rail_map() -> Tuple[GridTransitionMap, np.array]:
     
     # define map
     rail_map = np.array(
-        [[right_turn_from_south] + [simple_switch_right_east] + [horizontal_straight]+ [right_turn_from_west]+ [empty]] +
-        [[vertical_straight] + [simple_switch_north_right] + [simple_switch_right_east]+ [simple_switch_left_east]+ [right_turn_from_west]] +
-        [[vertical_straight] + [vertical_straight]  + [vertical_straight]+ [empty]+ [vertical_straight]] +
-        [[vertical_straight] + [vertical_straight]  + [vertical_straight]+ [empty]+ [vertical_straight]] +
-        [[right_turn_from_east] + [right_turn_from_north]  + [right_turn_from_east]+ [horizontal_straight]+ [right_turn_from_north]] +
-        [[empty] * 5], dtype=np.uint16)
+        [[right_turn_from_south] + [horizontal_straight] + [right_turn_from_west]+ [empty]+ [right_turn_from_south] + [horizontal_straight] + [right_turn_from_west]] +
+        [[vertical_straight] + [empty] + [simple_switch_north_right]+ [horizontal_straight]+ [simple_switch_north_left]+ [empty]+ [vertical_straight]] +
+        [[right_turn_from_east] + [simple_switch_right_east]  + [right_turn_from_north]+ [empty]+ [right_turn_from_east] + [simple_switch_right_east]  + [right_turn_from_north]] +
+        [[empty] + [vertical_straight]  + [empty]+ [empty]+ [empty]+ [vertical_straight]+ [empty]] +
+        [[right_turn_from_south] + [simple_switch_left_east]  + [right_turn_from_west]+ [empty]+ [right_turn_from_south]+ [simple_switch_left_east]  + [right_turn_from_west]] +
+        [[vertical_straight] + [empty]  + [simple_switch_north_right]+ [horizontal_straight]+ [simple_switch_north_left] + [empty]+ [vertical_straight]] +
+        [[right_turn_from_east] + [horizontal_straight]  + [right_turn_from_north]+ [empty]+ [right_turn_from_east]+ [horizontal_straight]  + [right_turn_from_north]] +
+        [[empty] * 7], dtype=np.uint16)
     rail = GridTransitionMap(width=rail_map.shape[1],
                              height=rail_map.shape[0], transitions=transitions)
     rail.grid = rail_map
-    city_positions = [(1, 0), (4, 3), (3, 0), (2, 2)]
+    city_positions = [(1, 0), (0, 1), (0, 5), (1, 6), (5,0), (6,1), (6,5), (5,6)]
     train_stations = [
         [((1, 0), 0)],
-        [((4, 3), 0)],
-        [((3, 0), 0)],
-        [((2, 2), 0)],
+        [((0, 1), 0)],
+        [((0, 5), 0)],
+        [((1, 6), 0)],
+        [((5, 0), 0)],
+        [((6, 1), 0)],
+        [((6, 5), 0)],
+        [((5, 6), 0)]
     ]
-    city_orientations = [0, 0, 0, 0]
+    city_orientations = [0, 0, 0, 0, 0, 0, 0, 0]
     agents_hints = {'city_positions': city_positions,
                     'train_stations': train_stations,
                     'city_orientations': city_orientations
@@ -115,7 +123,7 @@ def create_env():
                   height=rail_map.shape[0],
                   rail_generator=rail_from_grid_transition_map(rail, optionals),
                   line_generator=sparse_line_generator(),
-                  number_of_agents=2,
+                  number_of_agents=4,
                   obs_builder_object=GlobalObsForRailEnv(),
                   )
     return env
@@ -203,7 +211,7 @@ def custom_railmap_example(sleep_for_animation, do_rendering):
     env.reset()
 
     # convert env to .lp
-    convert_env("5_5_a_2_switches_test", env)    
+    convert_env("7_7_a_4_test", env)    
 
     # instance gen done ----------------------
     # following code just checks if instance is valid (executable)

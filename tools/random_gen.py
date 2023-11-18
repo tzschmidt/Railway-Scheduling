@@ -7,6 +7,7 @@ from flatland.utils.rendertools import RenderTool
 from IPython.display import clear_output, display
 from flatland.envs.rail_env import RailEnvActions
 import numpy as np
+import json
 
 class RandomController:
     def __init__(self, action_size):
@@ -32,6 +33,32 @@ def render_env(env,wait=True):
     global x
     pil_image.save("./render/random_test"+str(x)+".png")
     x = x+1
+
+def save_as_json(name, env):
+
+    agent_id_list = []
+    target = []
+    start = []
+
+    for agent_idx, agent in enumerate(env.agents):
+        agent_id_list.append(agent_idx)
+        target.append([int(x) for x in agent.target])
+        start.append([int(y) for y in agent.initial_position])
+
+    grid = env.rail.grid.tolist()
+    start_list = start
+    target_list = target
+    agent = agent_id_list
+
+    data = {
+        'grid':grid,
+        'agents':agent,
+        'target':target_list,
+        'start':start_list
+    }
+
+    with open("..\instances\{}.json".format(name), "w") as json_file:
+        json.dump(data, json_file, indent=4)
 
 
 def convert_env(name, env):
@@ -74,6 +101,7 @@ def convert_env(name, env):
             if cell:
                 file.write("cell({},{}).\n".format(y, x)) 
     file.close()
+    save_as_json(name,env)
 
 
 def run_episode(env, controller, observations, info):
