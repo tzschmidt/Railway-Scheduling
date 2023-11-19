@@ -1,18 +1,63 @@
 
 import sys
 import re
+import json
+import numpy as np
 
 from flatland.envs.rail_env import RailEnv
+from flatland.core.grid.rail_env_grid import RailEnvTransitions
+from flatland.core.transition_map import GridTransitionMap
+from flatland.envs.line_generators import sparse_line_generator
+from flatland.envs.rail_env import RailEnv
+from flatland.envs.rail_generators import rail_from_grid_transition_map
+from flatland.utils.misc import str2bool
 from flatland.utils.rendertools import RenderTool
+from flatland.envs.observations import GlobalObsForRailEnv
 
+def helper(x):
+    return (tuple(x), 0)
 
-# TODO implement
 def get_env(file):
-    return
-
-
-def get_actions(file, n_agents):
+    f = open(file)
+    data = json.load(f)
+    f.close()
     
+    transitions = RailEnvTransitions()
+    rail_map = np.array(data['grid'])
+    rail = GridTransitionMap(width=rail_map.shape[1],
+                             height=rail_map.shape[0], transitions=transitions)
+    rail.grid = rail_map
+    city_positions = list(map(tuple,data['start'] + data['target']))
+    train_stations = list(map(helper,data['start'] + data['target']))
+    city_orientations = [0] * len(city_positions)
+    agents_hints = {'city_positions': city_positions,
+                    'train_stations': train_stations,
+                    'city_orientations': city_orientations
+                    }
+    optionals = {'agents_hints': agents_hints}
+    # make sure correct variation
+    check = False
+    while(True):
+        env = RailEnv(width=rail_map.shape[1],
+                  height=rail_map.shape[0],
+                  rail_generator=rail_from_grid_transition_map(rail),
+                  line_generator=sparse_line_generator(),
+                  number_of_agents=len(data['agents']),
+                  obs_builder_object=GlobalObsForRailEnv(),
+                  )
+        for i, agent in enumerate(env.agents):
+            if agent.initial_position == data['start'][i]:
+                if agent.target == data['target'][i]:
+                    if agent.direction == data['direction'][i]:
+                        check = True
+        if check:
+            break
+        else:
+            continue
+    return env
+
+
+def get_actions(file, n_agents):   
     with open(file, 'r') as f:
         lines = f.readlines()
     f.close()
@@ -79,9 +124,9 @@ def main(argv):
     env_file = argv[1]
     asp_file = argv[2]
     
-    # env = get_env(env_file)
+    env = get_env(env_file)
     
-    # actions = get_actions(asp_file, env.get_num_agents())
+    actions = get_actions(asp_file, env.get_num_agents())
     
     # visualize(env, actions)
    
