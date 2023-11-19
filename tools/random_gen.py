@@ -21,148 +21,67 @@ class RandomController:
         return actions
 
 
-# Render the environment
-def render_env(env,wait=True):
-
-    env_renderer = RenderTool(env, gl="PILSVG")
-    env_renderer.render_env()
-
-    image = env_renderer.get_image()
-    pil_image = PIL.Image.fromarray(image)
-    clear_output(wait=True)
-    global x
-    pil_image.save("./render/random_test"+str(x)+".png")
-    x = x+1
-
 def save_as_json(name, env):
 
     agent_id_list = []
     target = []
     start = []
+    agent_dir = []
 
     for agent_idx, agent in enumerate(env.agents):
         agent_id_list.append(agent_idx)
         target.append([int(x) for x in agent.target])
         start.append([int(y) for y in agent.initial_position])
+        agent_dir.append(agent.direction.tolist())
 
     grid = env.rail.grid.tolist()
     start_list = start
     target_list = target
     agent = agent_id_list
+    agent_direction = agent_dir
 
     data = {
         'grid':grid,
         'agents':agent,
         'target':target_list,
-        'start':start_list
+        'start':start_list,
+        'agent_direction':agent_direction
     }
 
     with open("..\instances\{}.json".format(name), "w") as json_file:
         json.dump(data, json_file, indent=4)
 
+def create_env():
 
-def convert_env(name, env):
+    rail_generator = sparse_rail_generator(
+        max_num_cities=2,
+        grid_mode=False,
+        max_rails_between_cities=2,
+        max_rail_pairs_in_city=2
+    )
 
-    file = open("..\instances\{}.lp".format(name), "w")
+    # Initialize the properties of the environment
+    random_env = RailEnv(
+        width=24,
+        height=24,
+        number_of_agents=1,
+        rail_generator=rail_generator,
+        line_generator=sparse_line_generator(),
+        obs_builder_object=GlobalObsForRailEnv()
+    )
 
-    for agent_idx, agent in enumerate(env.agents):
-        # agents
-        file.write("agent({}).\n".format(agent_idx))
-        # start position
-        pos = agent.initial_position
-        file.write("starting({},({},{})).\n".format(agent_idx, pos[0], pos[1]))
-        # direction
-        file.write("direction({},{}).\n".format(agent_idx, agent.direction))
-        # target position
-        pos = agent.target
-        file.write("target({},({},{})).\n".format(agent_idx, pos[0], pos[1]))
+    # Call reset() to initialize the environment
+    observation, info = random_env.reset()
 
-    # cells and their transitions
-    # trans((0,0),1,3) -> cell(0,0) when coming from from east(1) can exit west(3)
-    grid = env.rail.grid
-    for y in range(env.height):
-        for x in range(env.width):
-            val = "{0:016b}".format(grid[y][x])
-            d = [0]*4
-            d[2] = val[:4]
-            d[3] = val[4:8]
-            d[0] = val[8:12]
-            d[1] = val[12:]
-            cell = False
-            for i in range(4):
-                c = 0
-                for j in range(4):
-                    if d[i][j] == '1':
-                        file.write("transraw(({},{}),{},{}).\n".format(y, x, i, j))
-                        c += 1
-                if c != 0:
-                    cell = True
-                    file.write("trans_count(({},{}),{},{}).\n".format(y, x, i, c))
-            if cell:
-                file.write("cell({},{}).\n".format(y, x)) 
-    file.close()
-    save_as_json(name,env)
+    controller = RandomController(random_env.action_space[0])
+    observations, info = random_env.reset()
+    actions = controller.act(observations)
+
+    # Perform a single action per agent
+    for (handle, action) in actions.items():
+        next_obs, all_rewards, dones, info = random_env.step({handle: action})
 
 
-def run_episode(env, controller, observations, info):
-
-    score = 0
-    actions = dict()
-
-    for step in range(50):
-
-        actions = controller.act(observations)
-        next_observations, all_rewards, dones, info = env.step(actions)
-        for agent_handle in env.get_agent_handles():
-            score += all_rewards[agent_handle]
-
-        render_env(env)
-        print('Timestep {}, total score = {}'.format(step, score))
-
-        if dones['__all__']:
-            print('All done!')
-            return
-
-    print("Episode didn't finish after 50 timesteps.")
-
-
-x=0
-
-rail_generator = sparse_rail_generator(
-    max_num_cities=2,
-    grid_mode=False,
-    max_rails_between_cities=2,
-    max_rail_pairs_in_city=2
-)
-
-# Initialize the properties of the environment
-random_env = RailEnv(
-    width=24,
-    height=24,
-    number_of_agents=1,
-    rail_generator=rail_generator,
-    line_generator=sparse_line_generator(),
-    obs_builder_object=GlobalObsForRailEnv()
-)
-
-# Call reset() to initialize the environment
-observation, info = random_env.reset()
-
-render_env(random_env)
-
-controller = RandomController(random_env.action_space[0])
-observations, info = random_env.reset()
-actions = controller.act(observations)
-
-# Perform a single action per agent
-for (handle, action) in actions.items():
-    print('Agent {} will perform action {} ({})'.format(handle, action, RailEnvActions.to_char(action)))
-    next_obs, all_rewards, dones, info = random_env.step({handle: action})
-
-print('Rewards for each agent: {}'.format(all_rewards))
-print('Done for each agent: {}'.format(dones))
-print('Misc info: {}'.format(info))
-
-# run_episode(random_env, controller, observations, info)
-
-convert_env("random_test",random_env)
+def main(args):
+    create_env()
+    save_as_json("random_test",random_env)

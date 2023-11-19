@@ -35,5 +35,8 @@
             0,
             2
         ]
+    ],
+    "agent_direction": [
+        0
     ]
 }

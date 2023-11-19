@@ -118,225 +118,41 @@ def save_as_json(name, env):
     agent_id_list = []
     target = []
     start = []
+    agent_dir = []
 
     for agent_idx, agent in enumerate(env.agents):
         agent_id_list.append(agent_idx)
         target.append(agent.target)
         start.append(agent.initial_position)
+        agent_dir.append(agent.direction.tolist())
 
     grid = env.rail.grid.tolist()
     start_list = start
     target_list = target
     agent = agent_id_list
+    agent_direction = agent_dir
 
     data = {
         'grid':grid,
         'agents':agent,
         'target':target_list,
-        'start':start_list
+        'start':start_list,
+        'agent_direction':agent_direction
     }
 
     with open("..\instances\{}.json".format(name), "w") as json_file:
         json.dump(data, json_file, indent=4)
+    
 
-def convert_env(name, env):
-    
-    file = open("..\instances\{}.lp".format(name), "w")
-    
-    for agent_idx, agent in enumerate(env.agents):
-        # agents
-        file.write("agent({}).\n".format(agent_idx))
-        # start position
-        pos = agent.initial_position
-        file.write("starting({},({},{})).\n".format(agent_idx, pos[0], pos[1]))
-        # direction 
-        file.write("direction({},{}).\n".format(agent_idx, agent.direction))
-        # target position
-        pos = agent.target
-        file.write("target({},({},{})).\n".format(agent_idx, pos[0], pos[1]))
-    
-    # cells and their transitions
-    # trans((0,0),1,3) -> cell(0,0) when coming from from east(1) can exit west(3)
-    # other appproach trans((0,0),1,0) -> cell(0,0) when facing east(1) can exit north(0)
-    grid = env.rail.grid
-    for y in range(env.height):
-        for x in range(env.width):
-            val = "{0:016b}".format(grid[y][x])
-            d = [0]*4
-            d[2] = val[:4]
-            d[3] = val[4:8]
-            d[0] = val[8:12]
-            d[1] = val[12:]
-            # other approach
-            #d[0] = val[:4]
-            #d[1] = val[4:8]
-            #d[2] = val[8:12]
-            #d[3] = val[12:]
-            cell = False
-            for i in range(4):
-                c = 0
-                for j in range(4):
-                    if d[i][j] == '1':
-                        file.write("transraw(({},{}),{},{}).\n".format(y, x, i, j))
-                        c += 1
-                if c != 0:
-                    cell = True
-                    file.write("trans_count(({},{}),{},{}).\n".format(y, x, i, c))
-            if cell:
-                file.write("cell({},{}).\n".format(y, x))         
-    file.close()
-    save_as_json(name, env)
-    return
-    
-def custom_railmap_example(sleep_for_animation, do_rendering):
+def main(args):
     random.seed(100)
     np.random.seed(100)
 
     env = create_env()
     env.reset()
 
-    # convert env to .lp
-    convert_env("test", env)    
-
-    # instance gen done ----------------------
-    # following code just checks if instance is valid (executable)
-    
-    if do_rendering:
-        env_renderer = RenderTool(env,
-                              #agent_render_variant=AgentRenderVariant.ONE_STEP_BEHIND,
-                              show_debug=False,
-                              screen_height=600,  # Adjust these parameters to fit your resolution
-                              screen_width=800)  # Adjust these parameters to fit your resolution
-
-            
-    #nv_renderer.render_env(show=True)
-    #time.sleep(2)
-
-
-    controller = RandomAgent(218, 4)
-
-
-    # check agents
-    print("\n Agents in the environment have to solve the following tasks: \n")
-    for agent_idx, agent in enumerate(env.agents):
-        print(
-        "The agent with index {} has the task to go from its initial position {}, facing in the direction {} to its target at {}.".format(
-            agent_idx, agent.initial_position, agent.direction, agent.target))
-
-    # check status
-    print("\n Their current statuses are:")
-    print("============================")
-    for agent_idx, agent in enumerate(env.agents):
-        print("Agent {} status is: {} with its current position being {}".format(
-            agent_idx, str(agent.state), str(agent.position)))
-
-    # Empty dictionary for all agent action
-    action_dict = dict()
-
-    # exception -> problem in env
-    env.step(action_dict)
-    
-    # check speed
-    print("\n The speed information of the agents are:")
-    print("=========================================")
-    for agent_idx, agent in enumerate(env.agents):
-        print(
-        "Agent {} speed is: {:.2f} with the current fractional position being {}/{}".format(
-            agent_idx, agent.speed_counter.speed, agent.speed_counter.counter, agent.speed_counter.max_count))
-
-    # check malfunctions
-    print("\n The malfunction data of the agents are:")
-    print("========================================")
-    for agent_idx, agent in enumerate(env.agents):
-        print(
-        "Agent {} is OK = {}".format(
-            agent_idx, agent.malfunction_handler.in_malfunction))
-
-
-    for a in range(env.get_num_agents()):
-        action = controller.act(0)
-        action_dict.update({a: action})
-
-
-    observations, rewards, dones, information = env.step(action_dict)
-    print("\n The following agents can register an action:")
-    print("========================================")
-    for info in information['action_required']:
-        print("Agent {} needs to submit an action.".format(info))
-
-
-
-    print("\n Start sim:")
-    print("========================================")
-    if env_renderer is not None:
-        env_renderer.reset()
-
-    score = 0
-    # Run episode
-    frame_step = 0
-
-    os.makedirs("tmp/frames", exist_ok=True)
-
-    for step in range(50):
-        # Chose an action for each agent in the environment
-        for a in range(env.get_num_agents()):
-            action = controller.act(observations[a])
-            action_dict.update({a: action})
-
-        # Environment step which returns the observations for all agents, their corresponding
-        # reward and whether their are done
-
-        next_obs, all_rewards, done, _ = env.step(action_dict)
-
-        if env_renderer is not None:
-            env_renderer.render_env(show=True, show_observations=False, show_predictions=False)
-            env_renderer.gl.save_image('tmp/frames/flatland_frame_{:04d}.png'.format(step))
-
-        frame_step += 1
-        # Update replay buffer and train agent
-        for a in range(env.get_num_agents()):
-            controller.step((observations[a], action_dict[a], all_rewards[a], next_obs[a], done[a]))
-            score += all_rewards[a]
-
-        print("\n Their current statuses are:")
-        print("============================")
-        for agent_idx, agent in enumerate(env.agents):
-            print("Agent {} status is: {} with its current position being {}".format(
-                agent_idx, str(agent.state), str(agent.position)))
-            
-        observations = next_obs.copy()
-        if done['__all__']:
-            break
-        print('Episode: Steps {}\t Score = {}'.format(step, score))
-        
-        
-
-    # close the renderer / rendering window
-    if env_renderer is not None:
-        env_renderer.close_window()
-
-
-
-def main(args):
-    try:
-        opts, args = getopt.getopt(args, "", ["sleep-for-animation=", "do_rendering=", ""])
-    except getopt.GetoptError as err:
-        print(str(err))  # will print something like "option -a not recognized"
-        sys.exit(2)
-    sleep_for_animation = True
-    do_rendering = True
-    for o, a in opts:
-        if o in ("--sleep-for-animation"):
-            sleep_for_animation = str2bool(a)
-        elif o in ("--do_rendering"):
-            do_rendering = str2bool(a)
-        else:
-            assert False, "unhandled option"
-
-    # execute example
-    do_rendering = True
-    custom_railmap_example(sleep_for_animation, do_rendering)
-
+    # save env as json
+    save_as_json('test', env)
 
 if __name__ == '__main__':
     if 'argv' in globals():
