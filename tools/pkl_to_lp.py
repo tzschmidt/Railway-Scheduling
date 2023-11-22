@@ -1,33 +1,32 @@
 
 import sys
-import json
+from flatland.envs.rail_env import RailEnv
+from flatland.envs.persistence import RailEnvPersister
 
-def read_json(file):
+def load_instance(file):
     
-    f = open(file)
-    data = json.load(f)
-    f.close()
-    return data
+    env, env_dict = RailEnvPersister.load_new(file)
+    return env
 
-def convert_env(file, data):
+def convert_env(file, env):
 
     file = open(file, "w")
 
-    for agent_idx, agent in enumerate(data['agents']):
+    for agent_idx, agent in enumerate(env.agents):
         # agents
         file.write("agent({}).\n".format(agent_idx))
         # start position
-        pos = data['start'][agent_idx]
+        pos = agent.initial_position
         file.write("starting({},({},{})).\n".format(agent_idx, pos[0], pos[1]))
         # direction
-        file.write("direction({},{}).\n".format(agent_idx, data['direction'][agent_idx]))
+        file.write("direction({},{}).\n".format(agent_idx, agent.direction))
         # target position
-        pos = data['target'][agent_idx]
+        pos = agent.target
         file.write("target({},({},{})).\n".format(agent_idx, pos[0], pos[1]))
 
     # cells and their transitions
     # trans((0,0),1,3) -> cell(0,0) when coming from from east(1) can exit west(3)
-    grid = data['grid']
+    grid = env.rail.grid
     for y in range(len(grid)):
         for x in range(len(grid[0])):
             val = "{0:016b}".format(grid[y][x])
@@ -56,14 +55,14 @@ def main(argv):
     env_file = argv[1]
     asp_file = argv[2]
     
-    data = read_json(env_file)
+    env = load_instance(env_file)
     
-    convert_env(asp_file, data)
+    convert_env(asp_file, env)
     
    
 if __name__ == "__main__":
     if len(sys.argv) == 3:
         main(sys.argv)
     else:
-        print("Usage: json_to_lp.py <env-file.json> <env-file.lp>")
+        print("Usage: json_to_lp.py <env-file.pkl> <env-file.lp>")
 

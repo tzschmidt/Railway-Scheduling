@@ -17,6 +17,7 @@ from flatland.envs.rail_generators import rail_from_grid_transition_map
 from flatland.utils.misc import str2bool
 from flatland.utils.rendertools import RenderTool
 from flatland.envs.observations import GlobalObsForRailEnv
+from flatland.envs.persistence import RailEnvPersister
 
 
 class RandomAgent:
@@ -113,36 +114,10 @@ def create_env():
                   )
     return env
 
-def save_as_json(name, env):
+def save_instance(name, env):
 
-    agent_id_list = []
-    target = []
-    start = []
-    agent_dir = []
-
-    for agent_idx, agent in enumerate(env.agents):
-        agent_id_list.append(agent_idx)
-        target.append(agent.target)
-        start.append(agent.initial_position)
-        agent_dir.append(agent.direction.tolist())
-
-    grid = env.rail.grid.tolist()
-    start_list = start
-    target_list = target
-    agent = agent_id_list
-    agent_direction = agent_dir
-
-    data = {
-        'grid':grid,
-        'agents':agent,
-        'target':target_list,
-        'start':start_list,
-        'agent_direction':agent_direction
-    }
-
-    with open("..\instances\{}.json".format(name), "w") as json_file:
-        json.dump(data, json_file, indent=4)
-    
+    RailEnvPersister.save(env, "..\instances\{}.pkl".format(name))
+    return
 
 def main(args):
     random.seed(100)
@@ -152,7 +127,7 @@ def main(args):
     env.reset()
 
     # save env as json
-    save_as_json('test', env)
+    save_instance('test', env)
 
 if __name__ == '__main__':
     if 'argv' in globals():
