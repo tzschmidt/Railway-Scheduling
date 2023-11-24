@@ -20,37 +20,6 @@ from flatland.envs.observations import GlobalObsForRailEnv
 from flatland.envs.persistence import RailEnvPersister
 
 
-class RandomAgent:
-
-    def __init__(self, state_size, action_size):
-        self.state_size = state_size
-        self.action_size = action_size
-
-    def act(self, state):
-        """
-        :param state: input is the observation of the agent
-        :return: returns an action
-        """
-        return 2  # np.random.choice(np.arange(self.action_size))
-
-    def step(self, memories):
-        """
-        Step function to improve agent by adjusting policy given the observations
-
-        :param memories: SARS Tuple to be
-        :return:
-        """
-        return
-
-    def save(self, filename):
-        # Store the current policy
-        return
-
-    def load(self, filename):
-        # Load a policy
-        return
-
-
 def custom_rail_map() -> Tuple[GridTransitionMap, np.array]:
     # We instantiate a very simple rail network on a 3x3 grid:
     #   0 1 2 

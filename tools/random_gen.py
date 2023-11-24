@@ -9,17 +9,6 @@ from flatland.envs.rail_env import RailEnvActions
 import numpy as np
 from flatland.envs.persistence import RailEnvPersister
 
-class RandomController:
-    def __init__(self, action_size):
-        self.action_size = action_size
-
-    def act(self, observations):
-        actions = dict()
-        for agent_handle, observation in enumerate(observations):
-            action = np.random.randint(self.action_size)
-            actions.update({agent_handle: action})
-        return actions
-
 
 def save_instance(name, env):
 
@@ -44,19 +33,12 @@ def create_env():
         line_generator=sparse_line_generator(),
         obs_builder_object=GlobalObsForRailEnv()
     )
+    return random_env
 
-    # Call reset() to initialize the environment
-    observation, info = random_env.reset()
+def main():
+    env = create_env()
+    env.reset()
+    save_instance("random_test", env)
 
-    controller = RandomController(random_env.action_space[0])
-    observations, info = random_env.reset()
-    actions = controller.act(observations)
-
-    # Perform a single action per agent
-    for (handle, action) in actions.items():
-        next_obs, all_rewards, dones, info = random_env.step({handle: action})
-
-
-def main(args):
-    create_env()
-    save_instance("random_test",random_env)
+if __name__ == '__main__':
+        main()
