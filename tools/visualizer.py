@@ -2,6 +2,8 @@
 import sys
 import re
 import time
+import os
+import msvcrt
 import numpy as np
 
 from flatland.envs.rail_env import RailEnv, RailEnvActions
@@ -32,6 +34,7 @@ def get_actions(file, n_agents):
             solution = l
             
     # actions
+    # TODO use only one regex
     r1 = re.compile(r'\(\d+,\d+,\d+\)')
     m1 = r1.findall(solution)
 
@@ -44,14 +47,23 @@ def get_actions(file, n_agents):
     return actions
 
     
-# TODO finish  
 def visualize(env, actions, max_steps: int = 50, sim_delay: float = 0.5):
+    
+    # clear frames
+    frames_folder = 'tmp/frames'
+    for f in os.listdir(frames_folder):
+        fp = os.path.join(frames_folder, f)
+        if os.path.isfile(fp):
+            os.remove(fp)
+    
     env_renderer = RenderTool(env,
                           #agent_render_variant=AgentRenderVariant.ONE_STEP_BEHIND,
                           show_debug=False,
                           screen_height=600,  # Adjust these parameters to fit your resolution
                           screen_width=800)  # Adjust these parameters to fit your resolution
-    
+    env.reset()
+    # run env
+    # based on https://github.com/fbiannis/flatland-asp-collab/blob/main/flatlandasp/flatland_asp.py
     try:
             step = 0
             agents_step = {}
@@ -69,11 +81,11 @@ def visualize(env, actions, max_steps: int = 50, sim_delay: float = 0.5):
                                 agents_step[idx] = 0
                             actions_dict[agent.handle] = actions[idx][agents_step[idx]]
                     else:
-                        actions_dict[agent.handle] = RailEnvActions.MOVE_FORWARD
+                        actions_dict[agent.handle] = 2
 
                     if idx in agents_step:
                         print(
-                            f"Agent({idx}) is at {agent.position} and chose {Action(actionsdict[agent.handle])} at step {agents_step[idx]}/{len(self.agent_actions[idx])-1}.")
+                            f"Agent({idx}) is at {agent.position} and chose {actions_dict[agent.handle]} at step {agents_step[idx]}/{len(actions[idx])-1}.")
                     else:
                         print(
                             f"Agent({idx}) not spawned yet. {agent.state}")
@@ -82,12 +94,18 @@ def visualize(env, actions, max_steps: int = 50, sim_delay: float = 0.5):
 
                 env_renderer.render_env(show=True,
                                              return_image=True, show_rowcols=True, show_predictions=True, step=0)
-
+                env_renderer.gl.save_image('tmp/frames/flatland_frame_{:04d}.png'.format(step))
                 time.sleep(sim_delay)
                 step += 1
     except Exception as e:
         print(
             f"An exception occured which would otherwise have closed the rendering window.\n\n{e}\n")
+        
+    print('\nDone: frames can be found in \'tmp/frames/\'')
+    
+    if env_renderer is not None:
+        env_renderer.close_window()
+        
     return
 
 def main(argv):
