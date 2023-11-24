@@ -6,7 +6,6 @@ import os
 from typing import Tuple
 
 import numpy as np
-import json
 
 from flatland.core.env_observation_builder import DummyObservationBuilder
 from flatland.core.grid.rail_env_grid import RailEnvTransitions
@@ -17,37 +16,7 @@ from flatland.envs.rail_generators import rail_from_grid_transition_map
 from flatland.utils.misc import str2bool
 from flatland.utils.rendertools import RenderTool
 from flatland.envs.observations import GlobalObsForRailEnv
-
-
-class RandomAgent:
-
-    def __init__(self, state_size, action_size):
-        self.state_size = state_size
-        self.action_size = action_size
-
-    def act(self, state):
-        """
-        :param state: input is the observation of the agent
-        :return: returns an action
-        """
-        return 2  # np.random.choice(np.arange(self.action_size))
-
-    def step(self, memories):
-        """
-        Step function to improve agent by adjusting policy given the observations
-
-        :param memories: SARS Tuple to be
-        :return:
-        """
-        return
-
-    def save(self, filename):
-        # Store the current policy
-        return
-
-    def load(self, filename):
-        # Load a policy
-        return
+from flatland.envs.persistence import RailEnvPersister
 
 
 def custom_rail_map() -> Tuple[GridTransitionMap, np.array]:
@@ -117,36 +86,10 @@ def create_env():
                   )
     return env
 
-def save_as_json(name, env):
+def save_instance(name, env):
 
-    agent_id_list = []
-    target = []
-    start = []
-    agent_dir = []
-
-    for agent_idx, agent in enumerate(env.agents):
-        agent_id_list.append(agent_idx)
-        target.append(agent.target)
-        start.append(agent.initial_position)
-        agent_dir.append(agent.direction.tolist())
-
-    grid = env.rail.grid.tolist()
-    start_list = start
-    target_list = target
-    agent = agent_id_list
-    agent_direction = agent_dir
-
-    data = {
-        'grid':grid,
-        'agents':agent,
-        'target':target_list,
-        'start':start_list,
-        'agent_direction':agent_direction
-    }
-
-    with open("..\instances\{}.json".format(name), "w") as json_file:
-        json.dump(data, json_file, indent=4)
-
+    RailEnvPersister.save(env, "..\instances\{}.pkl".format(name))
+    return
     
 
 def main(args):
@@ -156,8 +99,8 @@ def main(args):
     env = create_env()
     env.reset()
 
-    # save env as json
-    save_as_json("5_5_a_1_test", env)
+    # save env as pkl
+    save_instance("5_5_a_1", env)
 
 if __name__ == '__main__':
     if 'argv' in globals():
