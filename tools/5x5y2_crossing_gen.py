@@ -4,6 +4,7 @@ import sys
 import time
 import os
 from typing import Tuple
+import pickle
 
 import numpy as np
 
@@ -78,6 +79,25 @@ def custom_rail_map() -> Tuple[GridTransitionMap, np.array]:
     optionals = {'agents_hints': agents_hints}
     return rail, rail_map, optionals
 
+def set_agent_attributes(env):
+    target_position_1 = (3, 0)
+    initial_position_1 = (0, 3)
+    direction_1 = 1
+        
+    # Set the target, initial_position, and direction for the first agent
+    env.agents[0].target = target_position_1
+    env.agents[0].initial_position = initial_position_1
+    env.agents[0].direction = direction_1
+
+    target_position_2 = (2, 3)
+    initial_position_2 = (4, 1)
+    direction_2 = 1
+        
+    # Set the target, initial_position, and direction for the first agent
+    env.agents[1].target = target_position_2
+    env.agents[1].initial_position = initial_position_2
+    env.agents[1].direction = direction_2
+
 
 def create_env():
     rail, rail_map, optionals = custom_rail_map()
@@ -88,11 +108,16 @@ def create_env():
                   number_of_agents=2,
                   obs_builder_object=GlobalObsForRailEnv(),
                   )
+
+    env.reset()
+
+    set_agent_attributes(env)
+
     return env
 
 def save_instance(name, env):
-
-    RailEnvPersister.save(env, "..\instances\{}.pkl".format(name))
+    file_path = os.path.join("..", "instances", f"{name}.pkl")
+    RailEnvPersister.save(env, file_path)
     return
     
 def main(args):
@@ -100,11 +125,9 @@ def main(args):
     np.random.seed(100)
 
     env = create_env()
-    env.reset()
-
+    
     # save env as pkl
-    save_instance("5_5_a_2_crossing", env)
-
+    save_instance("5x5y2-crossing", env)
 
 if __name__ == '__main__':
     if 'argv' in globals():

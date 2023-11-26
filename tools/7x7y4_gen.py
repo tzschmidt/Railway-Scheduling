@@ -85,6 +85,79 @@ def custom_rail_map() -> Tuple[GridTransitionMap, np.array]:
     optionals = {'agents_hints': agents_hints}
     return rail, rail_map, optionals
 
+def set_agent_attributes_circle(env):
+    target_position_1 = (6, 1)
+    initial_position_1 = (1, 0)
+    direction_1 = 0
+        
+    # Set the target, initial_position, and direction for the first agent
+    env.agents[0].target = target_position_1
+    env.agents[0].initial_position = initial_position_1
+    env.agents[0].direction = direction_1
+
+    target_position_2 = (0, 1)
+    initial_position_2 = (1, 6)
+    direction_2 = 2
+        
+    # Set the target, initial_position, and direction for the first agent
+    env.agents[1].target = target_position_2
+    env.agents[1].initial_position = initial_position_2
+    env.agents[1].direction = direction_2
+
+    target_position_3 = (0, 5)
+    initial_position_3 = (5, 6)
+    direction_3 = 2
+        
+    # Set the target, initial_position, and direction for the first agent
+    env.agents[2].target = target_position_3
+    env.agents[2].initial_position = initial_position_3
+    env.agents[2].direction = direction_3
+
+    target_position_4 = (6, 5)
+    initial_position_4 = (5, 0)
+    direction_4 = 0
+        
+    # Set the target, initial_position, and direction for the first agent
+    env.agents[3].target = target_position_4
+    env.agents[3].initial_position = initial_position_4
+    env.agents[3].direction = direction_4
+
+def set_agent_attributes_wait(env):
+    target_position_1 = (6, 5)
+    initial_position_1 = (1, 0)
+    direction_1 = 0
+        
+    # Set the target, initial_position, and direction for the first agent
+    env.agents[0].target = target_position_1
+    env.agents[0].initial_position = initial_position_1
+    env.agents[0].direction = direction_1
+
+    target_position_2 = (0, 5)
+    initial_position_2 = (1, 6)
+    direction_2 = 2
+        
+    # Set the target, initial_position, and direction for the first agent
+    env.agents[1].target = target_position_2
+    env.agents[1].initial_position = initial_position_2
+    env.agents[1].direction = direction_2
+
+    target_position_3 = (0, 1)
+    initial_position_3 = (5, 6)
+    direction_3 = 2
+        
+    # Set the target, initial_position, and direction for the first agent
+    env.agents[2].target = target_position_3
+    env.agents[2].initial_position = initial_position_3
+    env.agents[2].direction = direction_3
+
+    target_position_4 = (6, 1)
+    initial_position_4 = (5, 0)
+    direction_4 = 0
+        
+    # Set the target, initial_position, and direction for the first agent
+    env.agents[3].target = target_position_4
+    env.agents[3].initial_position = initial_position_4
+    env.agents[3].direction = direction_4
 
 def create_env():
     rail, rail_map, optionals = custom_rail_map()
@@ -95,11 +168,14 @@ def create_env():
                   number_of_agents=4,
                   obs_builder_object=GlobalObsForRailEnv(),
                   )
+    env.reset()
+    set_agent_attributes_wait(env)
+    # set_agent_attributes_circle(env)
     return env
 
 def save_instance(name, env):
-
-    RailEnvPersister.save(env, "..\instances\{}.pkl".format(name))
+    file_path = os.path.join("..", "instances", f"{name}.pkl")
+    RailEnvPersister.save(env, file_path)
     return
 
 def main(args):
@@ -107,10 +183,10 @@ def main(args):
     np.random.seed(100)
 
     env = create_env()
-    env.reset()
 
     # save env as pkl
-    save_instance("7_7_a_4", env)
+    save_instance("7x7y4-wait", env)
+    # save_instance("7x7y4-circle", env)
 
 
 if __name__ == '__main__':
