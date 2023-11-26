@@ -4,6 +4,7 @@ import sys
 import time
 import os
 from typing import Tuple
+import pickle
 
 import numpy as np
 
@@ -17,7 +18,6 @@ from flatland.utils.misc import str2bool
 from flatland.utils.rendertools import RenderTool
 from flatland.envs.observations import GlobalObsForRailEnv
 from flatland.envs.persistence import RailEnvPersister
-
 
 
 def custom_rail_map() -> Tuple[GridTransitionMap, np.array]:
@@ -50,25 +50,26 @@ def custom_rail_map() -> Tuple[GridTransitionMap, np.array]:
     double_switch_south_horizontal_straight = horizontal_straight + cells[6]
     double_switch_north_horizontal_straight = transitions.rotate_transition(
         double_switch_south_horizontal_straight, 180)
+    simple_crossing = vertical_straight + horizontal_straight 
     
     
     # define map
     rail_map = np.array(
-        [[right_turn_from_south] + [simple_switch_right_east] + [horizontal_straight]+ [right_turn_from_west]+ [empty]] +
-        [[vertical_straight] + [simple_switch_north_right] + [simple_switch_right_east]+ [simple_switch_left_east]+ [right_turn_from_west]] +
-        [[vertical_straight] + [vertical_straight]  + [vertical_straight]+ [empty]+ [vertical_straight]] +
-        [[vertical_straight] + [vertical_straight]  + [vertical_straight]+ [empty]+ [vertical_straight]] +
-        [[right_turn_from_east] + [right_turn_from_north]  + [right_turn_from_east]+ [horizontal_straight]+ [right_turn_from_north]] +
+        [[empty] + [empty] + [right_turn_from_south]+ [horizontal_straight]+ [right_turn_from_west]] +
+        [[empty] + [empty] + [vertical_straight]+ [empty]+ [vertical_straight]] +
+        [[right_turn_from_south]+ [horizontal_straight]+ [simple_crossing]+ [horizontal_straight]+ [right_turn_from_north]] +
+        [[vertical_straight] + [empty] + [vertical_straight]+ [empty]+ [empty]] +
+        [[right_turn_from_east] + [horizontal_straight]  + [right_turn_from_north]+ [empty]+ [empty]] +
         [[empty] * 5], dtype=np.uint16)
     rail = GridTransitionMap(width=rail_map.shape[1],
                              height=rail_map.shape[0], transitions=transitions)
     rail.grid = rail_map
-    city_positions = [(1, 0), (4, 3), (3, 0), (2, 2)]
+    city_positions = [(0, 3), (2, 3), (3, 0), (4, 1)]
     train_stations = [
-        [((1, 0), 0)],
-        [((4, 3), 0)],
+        [((0, 3), 0)],
+        [((2, 3), 0)],
         [((3, 0), 0)],
-        [((2, 2), 0)],
+        [((4, 1), 0)],
     ]
     city_orientations = [0, 0, 0, 0]
     agents_hints = {'city_positions': city_positions,
@@ -79,23 +80,24 @@ def custom_rail_map() -> Tuple[GridTransitionMap, np.array]:
     return rail, rail_map, optionals
 
 def set_agent_attributes(env):
-    target_position_1 = (4, 3)
-    initial_position_1 = (0, 1)
-    direction_1 = 0
+    target_position_1 = (3, 0)
+    initial_position_1 = (0, 3)
+    direction_1 = 1
         
     # Set the target, initial_position, and direction for the first agent
     env.agents[0].target = target_position_1
     env.agents[0].initial_position = initial_position_1
     env.agents[0].direction = direction_1
 
-    target_position_2 = (3, 0)
-    initial_position_2 = (2, 2)
-    direction_2 = 2
+    target_position_2 = (2, 3)
+    initial_position_2 = (4, 1)
+    direction_2 = 1
         
     # Set the target, initial_position, and direction for the first agent
     env.agents[1].target = target_position_2
     env.agents[1].initial_position = initial_position_2
     env.agents[1].direction = direction_2
+
 
 def create_env():
     rail, rail_map, optionals = custom_rail_map()
@@ -106,6 +108,7 @@ def create_env():
                   number_of_agents=2,
                   obs_builder_object=GlobalObsForRailEnv(),
                   )
+
     env.reset()
 
     set_agent_attributes(env)
@@ -116,16 +119,15 @@ def save_instance(name, env):
     file_path = os.path.join("..", "instances", f"{name}.pkl")
     RailEnvPersister.save(env, file_path)
     return
-
+    
 def main(args):
     random.seed(100)
     np.random.seed(100)
 
     env = create_env()
-
+    
     # save env as pkl
-    save_instance("5x5y2-switches", env)
-
+    save_instance("5x5x2-crossing", env)
 
 if __name__ == '__main__':
     if 'argv' in globals():
