@@ -51,15 +51,19 @@ def custom_rail_map() -> Tuple[GridTransitionMap, np.array]:
     double_switch_south_horizontal_straight = horizontal_straight + cells[6]
     double_switch_north_horizontal_straight = transitions.rotate_transition(
         double_switch_south_horizontal_straight, 180)
+    switch_02_01 = vertical_straight + right_turn_from_east
+    switch_02_03 = vertical_straight + right_turn_from_north
+    switch_31_12 = horizontal_straight + right_turn_from_south
+    switch_31_01 = horizontal_straight + right_turn_from_east
     
     
     # define map
     rail_map = np.array(
         [[right_turn_from_south] + [horizontal_straight] + [right_turn_from_west]+ [empty]+ [right_turn_from_south] + [horizontal_straight] + [right_turn_from_west]] +
-        [[vertical_straight] + [empty] + [simple_switch_north_right]+ [horizontal_straight]+ [simple_switch_north_left]+ [empty]+ [vertical_straight]] +
-        [[right_turn_from_east] + [simple_switch_right_east]  + [right_turn_from_north]+ [empty]+ [right_turn_from_east] + [simple_switch_right_east]  + [right_turn_from_north]] +
+        [[vertical_straight] + [empty] + [switch_02_01]+ [horizontal_straight]+ [switch_02_03]+ [empty]+ [vertical_straight]] +
+        [[right_turn_from_east] + [simple_switch_right_east]  + [right_turn_from_north]+ [empty]+ [right_turn_from_east] + [switch_31_12]  + [right_turn_from_north]] +
         [[empty] + [vertical_straight]  + [empty]+ [empty]+ [empty]+ [vertical_straight]+ [empty]] +
-        [[right_turn_from_south] + [simple_switch_left_east]  + [right_turn_from_west]+ [empty]+ [right_turn_from_south]+ [simple_switch_left_east]  + [right_turn_from_west]] +
+        [[right_turn_from_south] + [simple_switch_left_east]  + [right_turn_from_west]+ [empty]+ [right_turn_from_south]+ [switch_31_01]  + [right_turn_from_west]] +
         [[vertical_straight] + [empty]  + [simple_switch_north_right]+ [horizontal_straight]+ [simple_switch_north_left] + [empty]+ [vertical_straight]] +
         [[right_turn_from_east] + [horizontal_straight]  + [right_turn_from_north]+ [empty]+ [right_turn_from_east]+ [horizontal_straight]  + [right_turn_from_north]] +
         [[empty] * 7], dtype=np.uint16)
