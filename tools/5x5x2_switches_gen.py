@@ -124,7 +124,7 @@ def main(args):
     env = create_env()
 
     # save env as pkl
-    save_instance("5x5y2-switches", env)
+    save_instance("5x5x2-switches", env)
 
 
 if __name__ == '__main__':

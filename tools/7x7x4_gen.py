@@ -189,8 +189,8 @@ def main(args):
     env = create_env()
 
     # save env as pkl
-    save_instance("7x7y4-wait", env)
-    # save_instance("7x7y4-circle", env)
+    save_instance("7x7x4-wait", env)
+    # save_instance("7x7x4-circle", env)
 
 
 if __name__ == '__main__':

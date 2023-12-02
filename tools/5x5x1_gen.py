@@ -111,7 +111,7 @@ def main(args):
     env.reset()
 
     # save env as pkl
-    save_instance("5x5y1-switches", env)
+    save_instance("5x5x1-switches", env)
 
 if __name__ == '__main__':
     if 'argv' in globals():

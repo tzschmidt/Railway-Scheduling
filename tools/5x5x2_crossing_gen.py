@@ -127,7 +127,7 @@ def main(args):
     env = create_env()
     
     # save env as pkl
-    save_instance("5x5y2-crossing", env)
+    save_instance("5x5x2-crossing", env)
 
 if __name__ == '__main__':
     if 'argv' in globals():
