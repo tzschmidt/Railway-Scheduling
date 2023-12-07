@@ -35,15 +35,14 @@ def get_actions(file, n_agents):
             
     # actions
     # TODO use only one regex
-    r1 = re.compile(r'\(\d+,\d+,\d+\)')
-    m1 = r1.findall(solution)
-
-    r2 = re.compile(r'\((\d+),(\d+),(\d+)\)')
-    actions = [[0] * (len(m1)//n_agents)] * n_agents
-    for i in m1:
-        m2 = r2.match(i)
-        actions[int(m2.group(1))][int(m2.group(3))] = int(m2.group(2))
-
+    actions = [[]] * n_agents
+    for i in range(n_agents):
+        m1 = re.findall(rf'\({i},\d+,\d+\)', solution)
+        actions[i] = [0] * len(m1)
+        for j in m1:
+            m2 = re.match(rf'\({i},(\d+),(\d+)\)', j)
+            actions[i][int(m2.group(2))] = int(m2.group(1))
+    
     return actions
 
     
