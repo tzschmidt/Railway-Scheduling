@@ -58,9 +58,9 @@ Secondly for each agent and step at least one cell is assigned. This assignment 
 % finish at target
 :- not at(A,(Y,X),_), target(A,(Y,X)), agent(A).
 % dont move away from target
-:- at(A,C,S1), at(A,C1,S2), S1<S2, C!=C1, target(A,C), agent(A).
+:- at(A,C,S1), at(A,_,S2), S1<S2, target(A,C), agent(A).
 ```
-To make sure the agents achieve their objective two constraints are introduced. While the first constraint guarantees, that agents finish at their target, the second one prohibits agents from moving away from targets once reached. The latter is based on the property of flatland, that agents can despawn once their target is reached. Should this not be the case the last constraint should be removed to allow the encoding to solve specific corner cases.
+To make sure the agents achieve their objective two constraints are introduced. While the first constraint guarantees, that agents finish at their target, the second one prohibits agents from occupying any position once they reached their target. The latter is based on the property of flatland, that agents can despawn once their target is reached. Should this not be the case the last constraint should be removed to allow the encoding to solve specific corner cases.
 
 ```
 % no collisions
@@ -75,7 +75,9 @@ In a flatland scenario, two types of collisions can occur. Vertex collisions (tw
 ```
 % keep track of orientation via cell which agent entered from
 % starting direction
-entered_from(A,(Y-DY,X-DX),0) :- starting(A,(Y,X)), direction(A,D), conv(D,(DY,DX)).
+entered_from(A,(Y-DY,X-DX),0) :- starting(A,(Y,X)), direction(A,D), conv(D,(DY,DX)), trans(C1,(Y,X),C2), C1!=C2.
+% dead-end
+entered_from(A,(Y+DY,X+DX),0) :- starting(A,(Y,X)), direction(A,D), conv(D,(DY,DX)), trans(C,(Y,X),C).
 % wait
 entered_from(A,(Y1,X1),S) :- at(A,(Y,X),S), at(A,(Y,X),S-1), entered_from(A,(Y1,X1),S-1), agent(A), step(S).
 % move
@@ -88,10 +90,9 @@ The movement of all agents is constrained by the train track layout of the insta
 % move to neighbors or wait
 :- at(A,(Y1,X1),S-1), at(A,(Y2,X2),S), |Y1-Y2|+|X1-X2|>1, step(S), agent(A). 
 % continueous
-:- not at(A,_,S-1), at(A,_,S), step(S), agent(A). 
+:- not at(A,_,S-1), at(A,_,S), step(S), agent(A).
 % transitions
-:- entered_from(A,(Y1,X1),S-1), at(A,(Y2,X2),S-1), at(A,(Y3,X3),S), not trans((Y1,X1),(Y2,X2),(Y3,X3)), step(S), agent(A).
-
+:- entered_from(A,(Y1,X1),S-1), at(A,(Y2,X2),S-1), at(A,(Y3,X3),S), Y2!=Y3, X2!=X3, not trans((Y1,X1),(Y2,X2),(Y3,X3)), step(S), agent(A).
 ```
 All remaining criteria for a valid path are the constraints above. First, all disconnected paths are removed, i.e. positions for each agent at each time step represented by `at(A,C,S)` have to be either adjacent or the same as the previous step.   
 Secondly, the path should be continuous, so all paths where positions for steps in between are missing are removed.    
@@ -132,7 +133,7 @@ The last two actions can be found above. The right turn (3) is the same as the l
 The wait action (4) can simply be inferred by no change in the position of subsequent steps.
 
 ```
-#minimize{1,S: at(_,_,S)}.
+#minimize{1,S,A: at(A,_,S)}.
 %#show entered_from/3.
 #show at/3.
 #show action/3.
