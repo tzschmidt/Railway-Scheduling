@@ -18,6 +18,8 @@ from flatland.utils.rendertools import RenderTool
 from flatland.envs.observations import GlobalObsForRailEnv
 from flatland.envs.persistence import RailEnvPersister
 
+from line_generation import FixedLineGen
+
 
 def custom_rail_map() -> Tuple[GridTransitionMap, np.array]:
     # We instantiate a very simple rail network on a 7x7 grid:
@@ -94,87 +96,32 @@ def set_agent_attributes_circle(env):
     initial_position_1 = (1, 0)
     direction_1 = 0
         
-    # Set the target, initial_position, and direction for the first agent
-    env.agents[0].target = target_position_1
-    env.agents[0].initial_position = initial_position_1
-    env.agents[0].direction = direction_1
-
     target_position_2 = (0, 1)
     initial_position_2 = (1, 6)
-    direction_2 = 2
-        
-    # Set the target, initial_position, and direction for the first agent
-    env.agents[1].target = target_position_2
-    env.agents[1].initial_position = initial_position_2
-    env.agents[1].direction = direction_2
+    direction_2 = 2        
 
     target_position_3 = (0, 5)
     initial_position_3 = (5, 6)
     direction_3 = 2
         
-    # Set the target, initial_position, and direction for the first agent
-    env.agents[2].target = target_position_3
-    env.agents[2].initial_position = initial_position_3
-    env.agents[2].direction = direction_3
-
     target_position_4 = (6, 5)
     initial_position_4 = (5, 0)
     direction_4 = 0
         
-    # Set the target, initial_position, and direction for the first agent
-    env.agents[3].target = target_position_4
-    env.agents[3].initial_position = initial_position_4
-    env.agents[3].direction = direction_4
-
-def set_agent_attributes_wait(env):
-    target_position_1 = (6, 5)
-    initial_position_1 = (1, 0)
-    direction_1 = 0
-        
-    # Set the target, initial_position, and direction for the first agent
-    env.agents[0].target = target_position_1
-    env.agents[0].initial_position = initial_position_1
-    env.agents[0].direction = direction_1
-
-    target_position_2 = (0, 5)
-    initial_position_2 = (1, 6)
-    direction_2 = 2
-        
-    # Set the target, initial_position, and direction for the first agent
-    env.agents[1].target = target_position_2
-    env.agents[1].initial_position = initial_position_2
-    env.agents[1].direction = direction_2
-
-    target_position_3 = (0, 1)
-    initial_position_3 = (5, 6)
-    direction_3 = 2
-        
-    # Set the target, initial_position, and direction for the first agent
-    env.agents[2].target = target_position_3
-    env.agents[2].initial_position = initial_position_3
-    env.agents[2].direction = direction_3
-
-    target_position_4 = (6, 1)
-    initial_position_4 = (5, 0)
-    direction_4 = 0
-        
-    # Set the target, initial_position, and direction for the first agent
-    env.agents[3].target = target_position_4
-    env.agents[3].initial_position = initial_position_4
-    env.agents[3].direction = direction_4
 
 def create_env():
     rail, rail_map, optionals = custom_rail_map()
     env = RailEnv(width=rail_map.shape[1],
                   height=rail_map.shape[0],
                   rail_generator=rail_from_grid_transition_map(rail, optionals),
-                  line_generator=sparse_line_generator(),
+                  # 7x7x4-wait
+                  # line_generator=FixedLineGen([((1,0),(6,5),0),((1,6),(0,5),2),((5,6),(0,1),2),((5,0),(6,1),0)]),
+                  # 7x7x4-circle
+                  line_generator=FixedLineGen([((1,0),(6,1),0),((1,6),(0,1),2),((5,6),(0,5),2),((5,0),(6,5),0)]),
                   number_of_agents=4,
                   obs_builder_object=GlobalObsForRailEnv(),
                   )
     env.reset()
-    set_agent_attributes_wait(env)
-    # set_agent_attributes_circle(env)
     return env
 
 def save_instance(name, env):
@@ -189,8 +136,8 @@ def main(args):
     env = create_env()
 
     # save env as pkl
-    save_instance("7x7x4-wait", env)
-    # save_instance("7x7x4-circle", env)
+    # save_instance("7x7x4-wait", env)
+    save_instance("7x7x4-circle", env)
 
 
 if __name__ == '__main__':

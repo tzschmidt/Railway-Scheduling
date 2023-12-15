@@ -19,6 +19,7 @@ from flatland.utils.rendertools import RenderTool
 from flatland.envs.observations import GlobalObsForRailEnv
 from flatland.envs.persistence import RailEnvPersister
 
+from line_generation import FixedLineGen
 
 def custom_rail_map() -> Tuple[GridTransitionMap, np.array]:
     # We instantiate a very simple rail network on a 5x5 grid:
@@ -79,40 +80,17 @@ def custom_rail_map() -> Tuple[GridTransitionMap, np.array]:
     optionals = {'agents_hints': agents_hints}
     return rail, rail_map, optionals
 
-def set_agent_attributes(env):
-    target_position_1 = (2, 4)
-    initial_position_1 = (2, 0)
-    direction_1 = 1
-        
-    # Set the target, initial_position, and direction for the first agent
-    env.agents[0].target = target_position_1
-    env.agents[0].initial_position = initial_position_1
-    env.agents[0].direction = direction_1
-
-    target_position_2 = (0, 2)
-    initial_position_2 = (4, 2)
-    direction_2 = 0
-        
-    # Set the target, initial_position, and direction for the first agent
-    env.agents[1].target = target_position_2
-    env.agents[1].initial_position = initial_position_2
-    env.agents[1].direction = direction_2
-
-
 def create_env():
     rail, rail_map, optionals = custom_rail_map()
     env = RailEnv(width=rail_map.shape[1],
                   height=rail_map.shape[0],
                   rail_generator=rail_from_grid_transition_map(rail, optionals),
-                  line_generator=sparse_line_generator(),
+                  line_generator=FixedLineGen([((2,0),(2,4),3),((0,2),(4,2),0)]),
                   number_of_agents=2,
                   obs_builder_object=GlobalObsForRailEnv(),
                   )
 
     env.reset()
-
-    set_agent_attributes(env)
-
     return env
 
 def save_instance(name, env):

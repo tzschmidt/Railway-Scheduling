@@ -18,6 +18,7 @@ from flatland.utils.rendertools import RenderTool
 from flatland.envs.observations import GlobalObsForRailEnv
 from flatland.envs.persistence import RailEnvPersister
 
+from line_generation import FixedLineGen
 
 
 def custom_rail_map() -> Tuple[GridTransitionMap, np.array]:
@@ -63,9 +64,9 @@ def custom_rail_map() -> Tuple[GridTransitionMap, np.array]:
     rail = GridTransitionMap(width=rail_map.shape[1],
                              height=rail_map.shape[0], transitions=transitions)
     rail.grid = rail_map
-    city_positions = [(1, 0), (4, 3), (3, 0), (2, 2)]
+    city_positions = [(0, 1), (4, 3), (3, 0), (2, 2)]
     train_stations = [
-        [((1, 0), 0)],
+        [((0, 1), 0)],
         [((4, 3), 0)],
         [((3, 0), 0)],
         [((2, 2), 0)],
@@ -78,38 +79,16 @@ def custom_rail_map() -> Tuple[GridTransitionMap, np.array]:
     optionals = {'agents_hints': agents_hints}
     return rail, rail_map, optionals
 
-def set_agent_attributes(env):
-    target_position_1 = (4, 3)
-    initial_position_1 = (0, 1)
-    direction_1 = 0
-        
-    # Set the target, initial_position, and direction for the first agent
-    env.agents[0].target = target_position_1
-    env.agents[0].initial_position = initial_position_1
-    env.agents[0].direction = direction_1
-
-    target_position_2 = (3, 0)
-    initial_position_2 = (2, 2)
-    direction_2 = 2
-        
-    # Set the target, initial_position, and direction for the first agent
-    env.agents[1].target = target_position_2
-    env.agents[1].initial_position = initial_position_2
-    env.agents[1].direction = direction_2
-
 def create_env():
     rail, rail_map, optionals = custom_rail_map()
     env = RailEnv(width=rail_map.shape[1],
                   height=rail_map.shape[0],
                   rail_generator=rail_from_grid_transition_map(rail, optionals),
-                  line_generator=sparse_line_generator(),
+                  line_generator=FixedLineGen([((0,1),(4,3),0),((2,2),(3,0),2)]),
                   number_of_agents=2,
                   obs_builder_object=GlobalObsForRailEnv(),
                   )
     env.reset()
-
-    set_agent_attributes(env)
-
     return env
 
 def save_instance(name, env):
