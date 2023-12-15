@@ -64,5 +64,5 @@ if __name__ == "__main__":
     if len(sys.argv) == 3:
         main(sys.argv)
     else:
-        print("Usage: json_to_lp.py <env-file.pkl> <env-file.lp>")
+        print("Usage: pkl_to_lp.py <env-file.pkl> <env-file.lp>")
 

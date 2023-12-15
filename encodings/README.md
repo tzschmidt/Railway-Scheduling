@@ -92,7 +92,7 @@ The movement of all agents is constrained by the train track layout of the insta
 % continueous
 :- not at(A,_,S-1), at(A,_,S), step(S), agent(A).
 % transitions
-:- entered_from(A,(Y1,X1),S-1), at(A,(Y2,X2),S-1), at(A,(Y3,X3),S), Y2!=Y3, X2!=X3, not trans((Y1,X1),(Y2,X2),(Y3,X3)), step(S), agent(A).
+:- entered_from(A,C1,S-1), at(A,C2,S-1), at(A,C3,S), C2!=C3, not trans(C1,C2,C3), step(S), agent(A).
 ```
 All remaining criteria for a valid path are the constraints above. First, all disconnected paths are removed, i.e. positions for each agent at each time step represented by `at(A,C,S)` have to be either adjacent or the same as the previous step.   
 Secondly, the path should be continuous, so all paths where positions for steps in between are missing are removed.    
