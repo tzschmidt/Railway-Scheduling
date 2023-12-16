@@ -4,6 +4,7 @@ import sys
 import time
 import os
 from typing import Tuple
+import pickle
 
 import numpy as np
 
@@ -20,17 +21,14 @@ from flatland.envs.persistence import RailEnvPersister
 
 from line_generation import FixedLineGen
 
-
 def custom_rail_map() -> Tuple[GridTransitionMap, np.array]:
-    # We instantiate a very simple rail network on a 7x7 grid:
-    #   0 1 2 3 4 5 6
+    # We instantiate a very simple rail network on a 5x5 grid:
+    #   0 1 2 3 4
     # 0     
-    # 1 - - - - - - -    
+    # 1 - - - - -    
     # 2     
     # 3
     # 4
-    # 5
-    # 6
 
     transitions = RailEnvTransitions()
     cells = transitions.transition_list
@@ -53,37 +51,28 @@ def custom_rail_map() -> Tuple[GridTransitionMap, np.array]:
     double_switch_south_horizontal_straight = horizontal_straight + cells[6]
     double_switch_north_horizontal_straight = transitions.rotate_transition(
         double_switch_south_horizontal_straight, 180)
-    switch_02_01 = vertical_straight + right_turn_from_east
-    switch_02_03 = vertical_straight + right_turn_from_north
-    switch_31_12 = horizontal_straight + right_turn_from_south
-    switch_31_01 = horizontal_straight + right_turn_from_east
+    simple_crossing = vertical_straight + horizontal_straight 
     
     
     # define map
     rail_map = np.array(
-        [[right_turn_from_south] + [horizontal_straight] + [right_turn_from_west]+ [empty]+ [right_turn_from_south] + [horizontal_straight] + [right_turn_from_west]] +
-        [[vertical_straight] + [empty] + [switch_02_01]+ [horizontal_straight]+ [switch_02_03]+ [empty]+ [vertical_straight]] +
-        [[right_turn_from_east] + [simple_switch_right_east]  + [right_turn_from_north]+ [empty]+ [right_turn_from_east] + [switch_31_12]  + [right_turn_from_north]] +
-        [[empty] + [vertical_straight]  + [empty]+ [empty]+ [empty]+ [vertical_straight]+ [empty]] +
-        [[right_turn_from_south] + [simple_switch_left_east]  + [right_turn_from_west]+ [empty]+ [right_turn_from_south]+ [switch_31_01]  + [right_turn_from_west]] +
-        [[vertical_straight] + [empty]  + [simple_switch_north_right]+ [horizontal_straight]+ [simple_switch_north_left] + [empty]+ [vertical_straight]] +
-        [[right_turn_from_east] + [horizontal_straight]  + [right_turn_from_north]+ [empty]+ [right_turn_from_east]+ [horizontal_straight]  + [right_turn_from_north]] +
-        [[empty] * 7], dtype=np.uint16)
+        [[empty] + [empty] + [dead_end_from_south]+ [empty]+ [empty]] +
+        [[empty] + [empty] + [vertical_straight]+ [empty]+ [empty]] +
+        [[dead_end_from_east]+ [horizontal_straight]+ [simple_crossing]+ [horizontal_straight]+ [dead_end_from_west]] +
+        [[empty] + [empty] + [vertical_straight]+ [empty]+ [empty]] +
+        [[empty] + [empty]  + [dead_end_from_north]+ [empty]+ [empty]] +
+        [[empty] * 5], dtype=np.uint16)
     rail = GridTransitionMap(width=rail_map.shape[1],
                              height=rail_map.shape[0], transitions=transitions)
     rail.grid = rail_map
-    city_positions = [(1, 0), (0, 1), (0, 5), (1, 6), (5,0), (6,1), (6,5), (5,6)]
+    city_positions = [(2, 0), (2, 4), (0, 2), (4, 2)]
     train_stations = [
-        [((1, 0), 0)],
-        [((0, 1), 0)],
-        [((0, 5), 0)],
-        [((1, 6), 0)],
-        [((5, 0), 0)],
-        [((6, 1), 0)],
-        [((6, 5), 0)],
-        [((5, 6), 0)]
+        [((2, 0), 0)],
+        [((2, 4), 0)],
+        [((0, 2), 0)],
+        [((4, 2), 0)],
     ]
-    city_orientations = [0, 0, 0, 0, 0, 0, 0, 0]
+    city_orientations = [0, 0, 0, 0]
     agents_hints = {'city_positions': city_positions,
                     'train_stations': train_stations,
                     'city_orientations': city_orientations
@@ -91,36 +80,16 @@ def custom_rail_map() -> Tuple[GridTransitionMap, np.array]:
     optionals = {'agents_hints': agents_hints}
     return rail, rail_map, optionals
 
-def set_agent_attributes_circle(env):
-    target_position_1 = (6, 1)
-    initial_position_1 = (1, 0)
-    direction_1 = 0
-        
-    target_position_2 = (0, 1)
-    initial_position_2 = (1, 6)
-    direction_2 = 2        
-
-    target_position_3 = (0, 5)
-    initial_position_3 = (5, 6)
-    direction_3 = 2
-        
-    target_position_4 = (6, 5)
-    initial_position_4 = (5, 0)
-    direction_4 = 0
-        
-
 def create_env():
     rail, rail_map, optionals = custom_rail_map()
     env = RailEnv(width=rail_map.shape[1],
                   height=rail_map.shape[0],
                   rail_generator=rail_from_grid_transition_map(rail, optionals),
-                  # 7x7x4-wait
-                  # line_generator=FixedLineGen([((1,0),(6,5),0),((1,6),(0,5),2),((5,6),(0,1),2),((5,0),(6,1),0)]),
-                  # 7x7x4-circle
-                  line_generator=FixedLineGen([((1,0),(6,1),0),((1,6),(0,1),2),((5,6),(0,5),2),((5,0),(6,5),0)]),
-                  number_of_agents=4,
+                  line_generator=FixedLineGen([((2,0),(2,4),3),((0,2),(4,2),0)]),
+                  number_of_agents=2,
                   obs_builder_object=GlobalObsForRailEnv(),
                   )
+
     env.reset()
     return env
 
@@ -128,17 +97,15 @@ def save_instance(name, env):
     file_path = os.path.join("..", "instances", f"{name}.pkl")
     RailEnvPersister.save(env, file_path)
     return
-
+    
 def main(args):
     random.seed(100)
     np.random.seed(100)
 
     env = create_env()
-
+    
     # save env as pkl
-    # save_instance("7x7x4-wait", env)
-    save_instance("7x7x4-circle", env)
-
+    save_instance("5x5x2-wait", env)
 
 if __name__ == '__main__':
     if 'argv' in globals():
