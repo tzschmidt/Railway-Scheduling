@@ -85,7 +85,7 @@ def create_env():
     env = RailEnv(width=rail_map.shape[1],
                   height=rail_map.shape[0],
                   rail_generator=rail_from_grid_transition_map(rail, optionals),
-                  line_generator=FixedLineGen([((2,0),(2,4),3),((4,2),(0,2),2)]),
+                  line_generator=FixedLineGen([((2,0),(2,4),1),((4,2),(0,2),0)]),
                   number_of_agents=2,
                   obs_builder_object=GlobalObsForRailEnv(),
                   )
