@@ -75,9 +75,9 @@ In a flatland scenario, two types of collisions can occur. Vertex collisions (tw
 ```
 % keep track of orientation via cell which agent entered from
 % starting direction
-entered_from(A,(Y-DY,X-DX),0) :- starting(A,(Y,X)), direction(A,D), conv(D,(DY,DX)), trans(C1,(Y,X),C2), C1!=C2.
+entered_from(A,(Y-DY,X-DX),0) :- starting(A,(Y,X)), direction(A,D), conv(D,(DY,DX)), trans((Y-DY,X-DX),(Y,X),_).
 % dead-end
-entered_from(A,(Y+DY,X+DX),0) :- starting(A,(Y,X)), direction(A,D), conv(D,(DY,DX)), trans(C,(Y,X),C).
+entered_from(A,(Y+DY,X+DX),0) :- starting(A,(Y,X)), direction(A,D), conv(D,(DY,DX)), not trans((Y-DY,X-DX),(Y,X),_).
 % wait
 entered_from(A,(Y1,X1),S) :- at(A,(Y,X),S), at(A,(Y,X),S-1), entered_from(A,(Y1,X1),S-1), agent(A), step(S).
 % move
@@ -139,3 +139,30 @@ The wait action (4) can simply be inferred by no change in the position of subse
 #show action/3.
 ```
 The minimization above guarantees an optimal solution with no useless "wait" actions and the fastest path to the target. The other lines are for debugging and output generation, which can be interpreted by our tools.
+
+## scheduler_dev.lp
+
+`scheduler_dev.lp` tries different approaches to optimize the above encoding. 2 approaches have been tested so far.
+```
+0{at(A,(Y2,X2),S) : cell(Y2,X2), at(A,(Y1,X1),S-1), |Y1-Y2|+|X1-X2|<=1}1 :- agent(A), step(S).
+```
+In the first approach above the generation of possible positions (`at/3`) is limited to neighboring cells with tracks instead of all cells with tracks of the instance.  
+The additional removal of the constraint which checks for valid moves only to neighboring cells does not result in a performance increase.
+
+```
+% first decide if stay (wait) or not
+0{stay(A,S) : at(A,_,S-1)}1 :- agent(A), step(S).
+at(A,C,S) :- at(A,C,S-1), stay(A,S).
+% limit to valid transitions if not stayed
+0{at(A,C3,S) : trans(C1,C2,C3), entered_from(A,C1,S-1), at(A,C2,S-1)}1 :- agent(A), step(S), not stay(A,S).
+```
+The second approach splits waiting and moving. First possible `stay(A,S)` predicates are generated, which denotes that agent `A` stays in its previous position at step `S`, which results in the positions in the next line. For all remaining steps, possible positions (moves) can then be derived by the valid transitions.   
+The removal of the corresponding constraint can have varying effects depending on instance size.
+
+Preliminary testing shows, that the first approach halves the run-time, while the second approach is faster than the original encoding but scales worse. For a final conclusion, more testing is required.   
+In the table below the preliminary results can be seen with a step limit of 30. opt val denotes the number of occupied positions for all agents in the optimal solution and gives an estimate of the required computations. The other columns show the required run-time for the optimal solution in seconds.  
+
+instance | opt val | original | 1st appr | 1st appr w/o cons | 2nd appr | 2nd appr w/o cons
+:---|---:|---:|---:|---:|---:|---:
+7x7x4-wait | 52 | 13 | 6 | 8 | 5 | 2 
+7x7x4-circle | 100 | 29 | 14 | 15| 18 | 30 
