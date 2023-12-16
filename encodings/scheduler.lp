@@ -1,6 +1,6 @@
 
 % step limit
-#const slimit=40.
+#const slimit=20.
 
 step(1..slimit).
 
@@ -24,9 +24,9 @@ at(A,(Y,X),0) :- agent(A), starting(A,(Y,X)).
 
 % keep track of orientation via cell which agent entered from
 % starting direction
-entered_from(A,(Y-DY,X-DX),0) :- starting(A,(Y,X)), direction(A,D), conv(D,(DY,DX)), trans(C1,(Y,X),C2), C1!=C2.
+entered_from(A,(Y-DY,X-DX),0) :- starting(A,(Y,X)), direction(A,D), conv(D,(DY,DX)), trans((Y-DY,X-DX),(Y,X),_).
 % dead-end
-entered_from(A,(Y+DY,X+DX),0) :- starting(A,(Y,X)), direction(A,D), conv(D,(DY,DX)), trans(C,(Y,X),C).
+entered_from(A,(Y+DY,X+DX),0) :- starting(A,(Y,X)), direction(A,D), conv(D,(DY,DX)), not trans((Y-DY,X-DX),(Y,X),_).
 % wait
 entered_from(A,(Y1,X1),S) :- at(A,(Y,X),S), at(A,(Y,X),S-1), entered_from(A,(Y1,X1),S-1), agent(A), step(S).
 % move
