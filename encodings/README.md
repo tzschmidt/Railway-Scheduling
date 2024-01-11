@@ -150,6 +150,15 @@ In the first approach above the generation of possible positions (`at/3`) is lim
 The additional removal of the constraint which checks for valid moves only to neighboring cells does not result in a performance increase.
 
 ```
+% add transitions for waiting
+trans(C1,C2,C2) :- trans(C1,C2,_).
+% limit to valid transitions
+0{at(A,C3,S) : trans(C1,C2,C3), entered_from(A,C1,S-1), at(A,C2,S-1)}1 :- agent(A), step(S).
+
+```
+This approach was further improved by limiting possible positions to cells with valid transitions. To be able to allow agents to remain in their position the transitions had to be expanded. Similar to above, removing the constraints regarding path validation does not improve run-time but even hurts it. 
+
+```
 % first decide if stay (wait) or not
 0{stay(A,S) : at(A,_,S-1)}1 :- agent(A), step(S).
 at(A,C,S) :- at(A,C,S-1), stay(A,S).
@@ -160,9 +169,9 @@ The second approach splits waiting and moving. First possible `stay(A,S)` predic
 The removal of the corresponding constraint can have varying effects depending on instance size.
 
 Preliminary testing shows, that the first approach halves the run-time, while the second approach is faster than the original encoding but scales worse. For a final conclusion, more testing is required.   
-In the table below the preliminary results can be seen with a step limit of 30. opt val denotes the number of occupied positions for all agents in the optimal solution and gives an estimate of the required computations. The other columns show the required run-time for the optimal solution in seconds.  
+In the table below the preliminary results can be seen with a step limit of 30. opt val denotes the number of occupied positions for all agents in the optimal solution and gives an estimate of the required computations. The other columns show the required run-time for the optimal solution in seconds. The value in parenthesis is the run-time of the improved approach.  
 
 instance | opt val | original | 1st appr | 1st appr w/o cons | 2nd appr | 2nd appr w/o cons
 :---|---:|---:|---:|---:|---:|---:
-7x7x4-wait | 52 | 13 | 6 | 8 | 5 | 2 
-7x7x4-circle | 100 | 29 | 14 | 15| 18 | 30 
+7x7x4-wait | 52 | 13 | 6 (5) | 8 (8) | 5 | 2 
+7x7x4-circle | 100 | 29 | 14 (13) | 15 (36) | 18 | 30 
