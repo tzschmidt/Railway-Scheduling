@@ -1,7 +1,7 @@
 # Encodings
 
 ## Usage
-`clingo helper.lp scheduler.lp ../instances/<instance>.lp [-c slimit=<step-limit>]`
+`clingo helper.lp <scheduler>.lp ../instances/<instance>.lp [-c slimit=<step-limit>]`
 If there is no step limit given, a limit of 10 will be used. This is subject to change.
 
 ## helper.lp
@@ -174,4 +174,8 @@ In the table below the preliminary results can be seen with a step limit of 30. 
 instance | opt val | original | 1st appr | 1st appr w/o cons | 2nd appr | 2nd appr w/o cons
 :---|---:|---:|---:|---:|---:|---:
 7x7x4-wait | 52 | 13 | 6 (5) | 8 (8) | 5 | 2 
-7x7x4-circle | 100 | 29 | 14 (13) | 15 (36) | 18 | 30 
+7x7x4-circle | 100 | 29 | 14 (13) | 15 (36) | 18 | 30
+
+## Benchmarking
+
+For benchmarking, we will compare the original encoding and the first approach described above. The original encoding is given version number 1.0, while the first approach and its improvement get the numbers 1.1 and 1.2 respectively. Encodings without `unneeded` constraints are marked with `nc`. A detailed explanation of our testing methodology and our results can be found in `/testing/'.  
