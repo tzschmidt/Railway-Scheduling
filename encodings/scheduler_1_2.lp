@@ -13,16 +13,6 @@ trans(C1,C2,C2) :- trans(C1,C2,_).
 % limit to valid transitions
 0{at(A,C3,S) : trans(C1,C2,C3), entered_from(A,C1,S-1), at(A,C2,S-1)}1 :- agent(A), step(S).
 
-% first decide if stay (wait) or not
-%0{stay(A,S) : at(A,_,S-1)}1 :- agent(A), step(S).
-%at(A,C,S) :- at(A,C,S-1), stay(A,S).
-% limit to valid transitions if not stayed
-%0{at(A,C3,S) : trans(C1,C2,C3), entered_from(A,C1,S-1), at(A,C2,S-1)}1 :- agent(A), step(S), not stay(A,S).
-
-% once waited, dont wait again
-%:- at(A,C1,S1), at(A,C1,S1+1), at(A,C,S), at(A,C,S+1), C1!=C, S1>S.
-
-
 % finish at target
 :- not at(A,(Y,X),_), target(A,(Y,X)), agent(A).
 % dont move away from target

@@ -8,20 +8,8 @@ step(1..slimit).
 at(A,(Y,X),0) :- agent(A), starting(A,(Y,X)).
 
 % generate positions
-% add transitions for waiting
-trans(C1,C2,C2) :- trans(C1,C2,_).
-% limit to valid transitions
-0{at(A,C3,S) : trans(C1,C2,C3), entered_from(A,C1,S-1), at(A,C2,S-1)}1 :- agent(A), step(S).
-
-% first decide if stay (wait) or not
-%0{stay(A,S) : at(A,_,S-1)}1 :- agent(A), step(S).
-%at(A,C,S) :- at(A,C,S-1), stay(A,S).
-% limit to valid transitions if not stayed
-%0{at(A,C3,S) : trans(C1,C2,C3), entered_from(A,C1,S-1), at(A,C2,S-1)}1 :- agent(A), step(S), not stay(A,S).
-
-% once waited, dont wait again
-%:- at(A,C1,S1), at(A,C1,S1+1), at(A,C,S), at(A,C,S+1), C1!=C, S1>S.
-
+% limit to neighbors
+0{at(A,(Y2,X2),S) : cell(Y2,X2), at(A,(Y1,X1),S-1), |Y1-Y2|+|X1-X2|<=1}1 :- agent(A), step(S).
 
 % finish at target
 :- not at(A,(Y,X),_), target(A,(Y,X)), agent(A).
@@ -47,7 +35,7 @@ entered_from(A,C,S) :- at(A,C1,S), at(A,C,S-1), C!=C1, agent(A), step(S).
 
 % only valid actions
 % move to neighbors or wait
-:- at(A,(Y1,X1),S-1), at(A,(Y2,X2),S), |Y1-Y2|+|X1-X2|>1, step(S), agent(A). 
+%:- at(A,(Y1,X1),S-1), at(A,(Y2,X2),S), |Y1-Y2|+|X1-X2|>1, step(S), agent(A). 
 % continueous
 :- not at(A,_,S-1), at(A,_,S), step(S), agent(A). 
 % transitions
