@@ -52,7 +52,7 @@ at(A,(Y,X),0) :- agent(A), starting(A,(Y,X)).
 0{at(A,(Y,X),S) : cell(Y,X)}1 :- agent(A), step(S).
 ```
 The lines above show the generation of position for each agent. To keep track of the positions the atom `at(A,(Y,X),S)` is used. Meaning agent `A` is at cell `(Y,X)` at step `S`. First, the positions at step 0 are copied from the starting positions given by the instance.    
-Secondly for each agent and step at least one cell is assigned. This assignment is very open and thus results in a large search tree for the solver. Hence this line will be our focus for future improvements for example by limiting the available cells for assignment to neighboring cells.
+Secondly for each agent and step at least one cell is assigned. This assignment is very open and thus results in a large search tree for the solver. Hence this line will be our focus for future improvements for example by limiting the available cells for assignment to neighbouring cells.
 
 ```
 % finish at target
@@ -89,7 +89,7 @@ The movement of all agents is constrained by the train track layout of the insta
 % only valid actions
 % move to neighbors or wait
 :- at(A,(Y1,X1),S-1), at(A,(Y2,X2),S), |Y1-Y2|+|X1-X2|>1, step(S), agent(A). 
-% continueous
+% continuous
 :- not at(A,_,S-1), at(A,_,S), step(S), agent(A).
 % transitions
 :- entered_from(A,C1,S-1), at(A,C2,S-1), at(A,C3,S), C2!=C3, not trans(C1,C2,C3), step(S), agent(A).
@@ -115,7 +115,7 @@ Using this, all left turns and therefore necessary "left" actions can be found b
 % forward: 2
 action(A,2,S) :- entered_from(A,(Y+DY,X+DX),S), at(A,(Y,X),S), at(A,(Y1,X1),S+1), Y!=Y1, trans_count((Y,X),D,N), conv(D,(DY,DX)), N=1.
 action(A,2,S) :- entered_from(A,(Y+DY,X+DX),S), at(A,(Y,X),S), at(A,(Y1,X1),S+1), X!=X1, trans_count((Y,X),D,N), conv(D,(DY,DX)), N=1.
-% foward on switches
+% forward on switches
 action(A,2,S) :- entered_from(A,(Y,X+DX),S), at(A,(Y,X),S), at(A,(Y,_),S+1), trans_count((Y,X),D,N), conv(D,(0,DX)), N>=2.
 action(A,2,S) :- entered_from(A,(Y+DY,X),S), at(A,(Y,X),S), at(A,(_,X),S+1), trans_count((Y,X),D,N), conv(D,(DY,0)), N>=2.
 ```
@@ -146,8 +146,8 @@ The minimization above guarantees an optimal solution with no useless "wait" act
 ```
 0{at(A,(Y2,X2),S) : cell(Y2,X2), at(A,(Y1,X1),S-1), |Y1-Y2|+|X1-X2|<=1}1 :- agent(A), step(S).
 ```
-In the first approach above the generation of possible positions (`at/3`) is limited to neighboring cells with tracks instead of all cells with tracks of the instance.  
-The additional removal of the constraint which checks for valid moves only to neighboring cells does not result in a performance increase.
+In the first approach above the generation of possible positions (`at/3`) is limited to neighbouring cells with tracks instead of all cells with tracks of the instance.  
+The additional removal of the constraint which checks for valid moves only to neighbouring cells does not result in a performance increase.
 
 ```
 % add transitions for waiting

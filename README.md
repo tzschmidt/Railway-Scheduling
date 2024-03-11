@@ -9,17 +9,17 @@ This project uses Answer Set Programming (ASP), specifically [clingo](https://po
 - `./instances/` contains all instances used for testing
 - `./tools/` contains all tools and scripts, e.g. for instance generation
 
-## ASP respresentation of the scenario
+## ASP representation of the scenario
 ### Grid
 - cells in the grid are represented as `cell(Y,X))`
-- directons are represented as numbers 0-3 (0=north, 1=east, 2=south and 3=west of the cell)
-- transitions are represented as `transraw((Y,X),IN,OUT)` whith `IN` and `OUT` being the directions from which a cell can be entered and then left
+- directions are represented as numbers 0-3 (0=north, 1=east, 2=south and 3=west of the cell)
+- transitions are represented as `transraw((Y,X),IN,OUT)` with `IN` and `OUT` being the directions from which a cell can be entered and then left
 - number of transitions `C` per cell `(Y,X)` per entry direction `D` are represented as `trans_count((Y,X),D,C)` 
 ### Agents
 all agents have:
 - an ID (starting with 0), written as `agent(ID)`
 - a starting location `starting(ID,(Y,X))`
-- a direction in wich they start, written as `direction(ID,DIRECTION)`
+- a direction in which they start, written as `direction(ID,DIRECTION)`
 - a target/goal written as `target(ID,(Y,X))`
 ### Example 
 #### Simple instance example 

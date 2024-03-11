@@ -38,7 +38,7 @@ entered_from(A,C,S) :- at(A,C1,S), at(A,C,S-1), C!=C1, agent(A), step(S).
 % only valid actions
 % move to neighbors or wait
 %:- at(A,(Y1,X1),S-1), at(A,(Y2,X2),S), |Y1-Y2|+|X1-X2|>1, step(S), agent(A). 
-% continueous
+% continuous
 :- not at(A,_,S-1), at(A,_,S), step(S), agent(A). 
 % transitions
 %:- entered_from(A,C1,S-1), at(A,C2,S-1), at(A,C3,S), C2!=C3, not trans(C1,C2,C3), step(S), agent(A).
