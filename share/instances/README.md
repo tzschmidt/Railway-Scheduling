@@ -1,7 +1,7 @@
 # Instances
 For the 7x7x4 instances a max step limit of 30 is recommended.
 
-- `5x5x1-switches`: is a 5x5 intance with one agent and multiple switches to check if a solver doesn't do multiple loops befor going to the target \
+- `5x5x1-switches`: is a 5x5 instance with one agent and multiple switches to check if a solver doesn't do multiple loops before going to the target \
   <image src=https://github.com/tzschmidt/Railway-Scheduling/assets/59642899/df181edd-37f5-42a0-b7ed-a41c2fe693e5 width=200 height=200>
 - `5x5x2-crossing`: is a instance with a crossing in the middle that 2 agents need to pass without colliding \
   <image src=https://github.com/tzschmidt/Railway-Scheduling/assets/59642899/719c5a8b-a864-49f7-a547-9c6b22623015 width=200 height=200>
