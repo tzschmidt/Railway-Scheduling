@@ -1,0 +1,8 @@
+all_instances\7x7x4-wait.pkl using ['encodings\\helper.lp', 'encodings\\scheduler_1_2.lp'], search optimum: True
+Answer:
+at(0,(1,0),0) at(1,(1,6),0) at(2,(5,6),0) at(3,(5,0),0) at(2,(6,6),1) at(1,(2,6),1) at(3,(4,0),1) at(0,(0,0),1) at(2,(6,5),2) at(1,(2,5),2) at(3,(4,1),2) at(0,(0,1),2) at(2,(6,4),3) at(1,(2,4),3) at(3,(4,2),3) at(0,(0,2),3) at(2,(5,4),4) at(1,(1,4),4) at(3,(5,2),4) at(0,(1,2),4) at(2,(5,3),5) at(1,(0,4),5) at(3,(6,2),5) at(0,(1,3),5) at(2,(5,2),6) at(1,(0,5),6) at(3,(6,1),6) at(0,(1,4),6) at(2,(6,2),7) at(0,(0,4),7) at(2,(6,1),8) at(0,(0,5),8) at(2,(6,0),9) at(0,(0,6),9) at(2,(5,0),10) at(0,(1,6),10) at(2,(4,0),11) at(0,(2,6),11) at(2,(4,1),12) at(0,(2,5),12) at(2,(3,1),13) at(0,(3,5),13) at(2,(2,1),14) at(0,(4,5),14) at(2,(2,0),15) at(0,(4,6),15) at(2,(1,0),16) at(0,(5,6),16) at(2,(0,0),17) at(0,(6,6),17) at(2,(0,1),18) at(0,(6,5),18) action(0,2,5) action(0,2,6) action(0,2,7) action(0,2,8) action(0,2,9) action(0,2,10) action(0,2,11) action(0,2,13) action(0,2,14) action(0,2,15) action(2,2,16) action(0,2,16) action(2,2,17) action(0,2,17) action(2,2,13) action(2,2,14) action(2,2,15) action(2,2,8) action(2,2,9) action(2,2,10) action(2,2,11) action(2,2,5) action(2,2,6) action(2,2,7) action(1,2,2) action(1,2,3) action(1,2,4) action(1,2,5) action(3,2,2) action(3,2,3) action(3,2,4) action(3,2,5) action(0,2,3) action(0,2,1) action(0,2,2) action(1,2,1) action(3,2,1) action(2,2,3) action(2,2,1) action(2,2,2) action(0,2,0) action(1,2,0) action(3,2,0) action(2,2,0) action(0,1,4) action(0,1,12) action(2,1,4) action(2,1,12)
+Cost: 52
+Choices: 14019.0
+Conflicts: 537.0
+Grounding time: 3.393085479736328
+Solving time: 0.2480010986328125

@@ -1,0 +1,8 @@
+all_instances\2x3x1-simple_switch.pkl using ['encodings\\helper.lp', 'encodings\\scheduler_1_1.lp'], search optimum: True
+Answer:
+at(0,(1,0),0) at(0,(1,1),1) at(0,(0,1),2) at(0,(0,2),3) action(0,2,2) action(0,2,0) action(0,1,1)
+Cost: 4
+Choices: 123.0
+Conflicts: 20.0
+Grounding time: 0.010999679565429688
+Solving time: 0.0010013580322265625

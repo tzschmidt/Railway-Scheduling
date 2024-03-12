@@ -10,12 +10,13 @@ import pkl_to_lp
 
 class Ins_Runner:
 
-    def __init__(self, ins_files, encodings, out_dir, time_limit, optimize):
+    def __init__(self, ins_files, encodings, out_dir, time_limit, optimize, id):
         self._ins_files = ins_files
         self._encodings = encodings
         self._out_dir = out_dir
         self._time_limit = time_limit
         self._opt = optimize
+        self._id = id
 
         self._model = None
         self._cost = None
@@ -79,7 +80,10 @@ class Ins_Runner:
             if solve_res.interrupted or solve_res.satisfiable:
                 done.set()
                 t1.join()
-                out_p = f"{str(self._out_dir)}/{os.path.basename(ins)[:-4]}_res.txt"
+                if self._id is None:
+                    out_p = f"{str(self._out_dir)}/{os.path.basename(ins)[:-4]}_res.txt"
+                else:
+                    out_p = f"{str(self._out_dir)}/{os.path.basename(ins)[:-4]}_{self._id}_res.txt"
                 if os.path.exists(out_p):
                     os.remove(out_p)
                 out_f = open(out_p, "w")
@@ -113,6 +117,7 @@ if __name__ == "__main__":
     parser.add_argument('encodings', type=Path, metavar='ENC', nargs='+', help='encoding to be used.')
     parser.add_argument('--optimize', action='store_true', help='find optimal solution.')
     parser.add_argument('--time-limit', type=int, default=1800, metavar="N", help='time limit in seconds.')
+    parser.add_argument('--id', type=str, help='additional identifier of result file.')
     
     args = parser.parse_args()
 
@@ -120,6 +125,6 @@ if __name__ == "__main__":
         os.makedirs(args.out_dir)
 
     ins_files = list(args.ins_dir.glob('*.pkl'))
-    runner = Ins_Runner(ins_files, args.encodings, args.out_dir, args.time_limit, args.optimize)
+    runner = Ins_Runner(ins_files, args.encodings, args.out_dir, args.time_limit, args.optimize, args.id)
     runner.main()
     print("All done")

@@ -1,0 +1,8 @@
+all_instances\5x5x2-crossing.pkl using ['encodings\\helper.lp', 'encodings\\scheduler_1_1.lp'], search optimum: False
+Answer:
+at(0,(0,3),0) at(1,(4,1),0) at(1,(4,2),1) at(0,(0,4),1) at(0,(0,4),2) at(1,(3,2),2) at(1,(2,2),3) at(0,(0,4),3) at(0,(0,4),4) at(1,(1,2),4) at(1,(1,2),5) at(0,(1,4),5) at(0,(1,4),6) at(1,(0,2),6) at(1,(0,3),7) at(0,(1,4),7) at(0,(1,4),8) at(1,(0,3),8) at(1,(0,4),9) at(0,(1,4),9) at(0,(1,4),10) at(1,(0,4),10) at(1,(0,4),11) at(0,(1,4),11) at(0,(2,4),12) at(1,(0,4),12) at(1,(0,4),13) at(0,(2,4),13) at(0,(2,4),14) at(1,(0,4),14) at(1,(1,4),15) at(0,(2,3),15) at(0,(2,3),16) at(1,(2,4),16) at(1,(2,4),17) at(0,(2,2),17) at(0,(2,1),18) at(1,(2,4),18) at(1,(2,4),19) at(0,(2,0),19) at(0,(3,0),20) at(1,(2,4),20) at(1,(2,3),21) action(0,4,2) action(0,4,3) action(1,4,4) action(0,4,5) action(0,4,6) action(0,4,7) action(1,4,7) action(0,4,8) action(0,4,9) action(1,4,9) action(1,4,10) action(0,4,10) action(1,4,11) action(1,4,12) action(0,4,12) action(0,4,13) action(1,4,13) action(0,4,15) action(1,4,16) action(1,4,17) action(1,4,18) action(1,4,19) action(0,4,1) action(0,2,4) action(0,2,11) action(0,2,14) action(0,2,16) action(0,2,17) action(0,2,18) action(0,2,19) action(1,2,8) action(1,2,14) action(1,2,15) action(1,2,20) action(1,2,5) action(1,2,6) action(0,2,0) action(1,2,3) action(1,2,2) action(1,2,1) action(1,2,0)
+Cost: 43
+Choices: 941.0
+Conflicts: 141.0
+Grounding time: 0.12600135803222656
+Solving time: 0.006000518798828125

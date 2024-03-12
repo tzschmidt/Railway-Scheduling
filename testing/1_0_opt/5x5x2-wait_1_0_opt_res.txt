@@ -1,0 +1,8 @@
+all_instances\5x5x2-wait.pkl using ['encodings\\helper.lp', 'encodings\\scheduler_1_0.lp'], search optimum: True
+Answer:
+at(0,(2,0),0) at(1,(4,2),0) at(1,(0,2),4) at(1,(1,2),3) at(0,(2,0),1) at(0,(2,1),2) at(0,(2,2),3) at(1,(2,2),2) at(0,(2,3),4) at(0,(2,4),5) at(1,(3,2),1) action(0,4,0) action(0,2,2) action(0,2,3) action(0,2,4) action(1,2,2) action(1,2,3) action(0,2,1) action(1,2,1) action(1,2,0)
+Cost: 11
+Choices: 1784.0
+Conflicts: 60.0
+Grounding time: 0.043994903564453125
+Solving time: 0.0060024261474609375

@@ -1,0 +1,8 @@
+all_instances\12x3x1-5xMulticircle.pkl using ['encodings\\helper.lp', 'encodings\\scheduler_1_2_nc.lp'], search optimum: False
+Answer:
+at(0,(2,0),0) at(0,(2,1),1) at(0,(2,1),2) at(0,(2,2),3) at(0,(2,3),4) at(0,(2,3),5) at(0,(2,3),6) at(0,(2,4),7) at(0,(2,5),8) at(0,(2,6),9) at(0,(2,7),10) at(0,(2,8),11) at(0,(2,9),12) at(0,(2,10),13) at(0,(1,10),14) at(0,(0,10),15) at(0,(0,10),16) at(0,(0,10),17) at(0,(0,9),18) at(0,(1,9),19) at(0,(2,9),20) at(0,(2,10),21) at(0,(2,11),22) at(0,(2,10),23) at(0,(2,9),24) at(0,(1,9),25) at(0,(0,9),26) at(0,(0,10),27) at(0,(0,11),28) action(0,4,1) action(0,4,4) action(0,4,5) action(0,4,15) action(0,4,16) action(0,3,24) action(0,2,6) action(0,2,7) action(0,2,8) action(0,2,9) action(0,2,10) action(0,2,11) action(0,2,12) action(0,2,14) action(0,2,17) action(0,2,19) action(0,2,20) action(0,2,21) action(0,2,22) action(0,2,23) action(0,2,25) action(0,2,26) action(0,2,27) action(0,2,3) action(0,2,2) action(0,2,0) action(0,1,13) action(0,1,18)
+Cost: 29
+Choices: 20107.0
+Conflicts: 1443.0
+Grounding time: 0.13599777221679688
+Solving time: 0.121002197265625

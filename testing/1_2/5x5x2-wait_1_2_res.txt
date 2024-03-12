@@ -1,0 +1,8 @@
+all_instances\5x5x2-wait.pkl using ['encodings\\helper.lp', 'encodings\\scheduler_1_2.lp'], search optimum: False
+Answer:
+at(0,(2,0),0) at(1,(4,2),0) at(1,(4,2),1) at(0,(2,1),1) at(1,(3,2),2) at(0,(2,2),2) at(1,(2,2),3) at(0,(2,3),3) at(1,(1,2),4) at(0,(2,3),4) at(1,(1,2),5) at(0,(2,3),5) at(1,(1,2),6) at(0,(2,3),6) at(1,(1,2),7) at(0,(2,3),7) at(1,(1,2),8) at(0,(2,3),8) at(1,(1,2),9) at(0,(2,3),9) at(1,(1,2),10) at(0,(2,3),10) at(1,(1,2),11) at(0,(2,3),11) at(1,(1,2),12) at(0,(2,3),12) at(1,(1,2),13) at(0,(2,3),13) at(1,(1,2),14) at(0,(2,3),14) at(1,(1,2),15) at(0,(2,3),15) at(1,(1,2),16) at(0,(2,3),16) at(1,(1,2),17) at(0,(2,3),17) at(1,(0,2),18) at(0,(2,4),18) action(1,4,0) action(0,4,3) action(1,4,4) action(0,4,4) action(1,4,5) action(0,4,5) action(1,4,6) action(0,4,6) action(1,4,7) action(0,4,7) action(1,4,8) action(0,4,8) action(1,4,9) action(0,4,9) action(1,4,10) action(0,4,10) action(1,4,11) action(0,4,11) action(1,4,12) action(0,4,12) action(1,4,13) action(0,4,13) action(1,4,14) action(0,4,14) action(1,4,15) action(0,4,15) action(1,4,16) action(0,4,16) action(0,2,0) action(0,2,1) action(0,2,2) action(0,2,17) action(1,2,17) action(1,2,3) action(1,2,2) action(1,2,1)
+Cost: 38
+Choices: 72.0
+Conflicts: 4.0
+Grounding time: 0.016998291015625
+Solving time: 0.0010013580322265625
