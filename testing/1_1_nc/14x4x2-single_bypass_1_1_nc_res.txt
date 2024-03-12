@@ -1,0 +1,8 @@
+all_instances\14x4x2-single_bypass.pkl using ['encodings\\helper.lp', 'encodings\\scheduler_1_1_nc.lp'], search optimum: False
+Answer:
+at(0,(2,1),0) at(1,(2,12),0) at(1,(2,11),1) at(0,(2,2),1) at(0,(2,3),2) at(1,(2,10),2) at(1,(2,9),3) at(0,(2,4),3) at(0,(2,5),4) at(1,(2,8),4) at(1,(2,7),5) at(0,(1,5),5) at(0,(1,6),6) at(1,(2,7),6) at(1,(2,6),7) at(0,(1,7),7) at(0,(1,8),8) at(1,(2,5),8) at(1,(2,4),9) at(0,(2,8),9) at(0,(2,9),10) at(1,(2,4),10) at(1,(2,4),11) at(0,(2,9),11) at(0,(2,9),12) at(1,(2,4),12) at(1,(2,4),13) at(0,(2,9),13) at(0,(2,9),14) at(1,(2,4),14) at(1,(2,4),15) at(0,(2,9),15) at(0,(2,9),16) at(1,(2,4),16) at(1,(2,4),17) at(0,(2,9),17) at(0,(2,9),18) at(1,(2,4),18) at(1,(2,3),19) at(0,(2,10),19) at(0,(2,11),20) at(1,(2,2),20) at(1,(2,1),21) at(0,(2,12),21) action(1,4,5) action(1,4,9) action(1,4,10) action(0,4,10) action(0,4,11) action(1,4,11) action(1,4,12) action(0,4,12) action(0,4,13) action(1,4,13) action(1,4,14) action(0,4,14) action(0,4,15) action(1,4,15) action(1,4,16) action(0,4,16) action(0,4,17) action(1,4,17) action(1,2,4) action(1,2,6) action(1,2,7) action(1,2,8) action(0,2,9) action(1,2,18) action(0,2,18) action(0,2,19) action(1,2,19) action(1,2,20) action(0,2,20) action(0,2,5) action(0,2,6) action(0,2,7) action(0,2,8) action(0,2,3) action(0,2,2) action(0,2,0) action(0,2,1) action(1,2,3) action(1,2,2) action(1,2,1) action(1,2,0) action(0,1,4)
+Cost: 44
+Choices: 367.0
+Conflicts: 58.0
+Grounding time: 0.16399765014648438
+Solving time: 0.004001617431640625

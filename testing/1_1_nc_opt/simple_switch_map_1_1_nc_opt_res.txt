@@ -1,0 +1,8 @@
+all_instances\simple_switch_map.pkl using ['encodings\\helper.lp', 'encodings\\scheduler_1_1_nc.lp'], search optimum: True
+Answer:
+at(0,(1,2),0) at(1,(1,0),0) at(1,(1,1),1) at(0,(1,2),1) at(0,(1,1),2) at(1,(0,1),2) at(1,(0,2),3) at(0,(1,0),3) at(1,(0,1),4) at(1,(1,1),5) at(1,(1,0),6) at(1,(1,1),7) at(1,(1,2),8) action(0,4,0) action(1,2,2) action(1,2,3) action(1,2,4) action(1,2,5) action(1,2,6) action(1,2,7) action(0,2,2) action(1,2,0) action(0,2,1) action(1,1,1)
+Cost: 13
+Choices: 553.0
+Conflicts: 242.0
+Grounding time: 0.0579986572265625
+Solving time: 0.005001068115234375

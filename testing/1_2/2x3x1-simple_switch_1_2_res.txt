@@ -1,0 +1,8 @@
+all_instances\2x3x1-simple_switch.pkl using ['encodings\\helper.lp', 'encodings\\scheduler_1_2.lp'], search optimum: False
+Answer:
+at(0,(1,0),0) at(0,(1,0),1) at(0,(1,0),2) at(0,(1,0),3) at(0,(1,0),4) at(0,(1,0),5) at(0,(1,0),6) at(0,(1,0),7) at(0,(1,0),8) at(0,(1,0),9) at(0,(1,0),10) at(0,(1,0),11) at(0,(1,0),12) at(0,(1,0),13) at(0,(1,0),14) at(0,(1,0),15) at(0,(1,1),16) at(0,(0,1),17) at(0,(0,2),18) action(0,4,0) action(0,4,1) action(0,4,2) action(0,4,3) action(0,4,4) action(0,4,5) action(0,4,6) action(0,4,7) action(0,4,8) action(0,4,9) action(0,4,10) action(0,4,11) action(0,4,12) action(0,4,13) action(0,4,14) action(0,2,15) action(0,2,17) action(0,1,16)
+Cost: 19
+Choices: 38.0
+Conflicts: 0.0
+Grounding time: 0.009998321533203125
+Solving time: 0.0

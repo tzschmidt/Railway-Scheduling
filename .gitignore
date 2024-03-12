@@ -1,6 +1,7 @@
 tmp/
 tools/*.txt
 tools/test*
+test/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -1,0 +1,8 @@
+all_instances\2x3x2-switch_dead_end_passing.pkl using ['encodings\\helper.lp', 'encodings\\scheduler_1_1_nc.lp'], search optimum: True
+Answer:
+at(0,(1,0),0) at(1,(1,2),0) at(1,(1,2),1) at(0,(1,1),1) at(0,(0,1),2) at(1,(1,1),2) at(1,(1,0),3) at(0,(0,2),3) at(0,(0,1),4) at(0,(1,1),5) at(0,(1,0),6) at(0,(1,1),7) at(0,(1,2),8) action(1,4,0) action(0,2,2) action(0,2,3) action(0,2,4) action(0,2,5) action(0,2,6) action(0,2,7) action(1,2,2) action(0,2,0) action(1,2,1) action(0,1,1)
+Cost: 13
+Choices: 588.0
+Conflicts: 305.0
+Grounding time: 0.01300048828125
+Solving time: 0.0049991607666015625
