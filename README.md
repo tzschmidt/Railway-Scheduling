@@ -5,8 +5,11 @@
 This project uses Answer Set Programming (ASP), specifically [clingo](https://potassco.org/clingo/), to solve train scheduling problems. As an framework for instance generation and testing we use [flatland](https://flatland.aicrowd.com/intro.html).
 
 ## Directory Structure
-- `./encodinds/` contains all ASP related files used for the scheduling
-- `./instances/` contains all instances used for testing
+- `./all_instances/` contains all instances used for testing
+- `./encodings/` contains all ASP related files used for the scheduling
+- `./instances/` contains all custom instances
+- `./share/` contains all instances and encodings provided for other groups
+- `./testing/` contains all testing results and plots
 - `./tools/` contains all tools and scripts, e.g. for instance generation
 
 ## ASP representation of the scenario
